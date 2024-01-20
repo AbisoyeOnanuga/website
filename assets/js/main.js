@@ -121,3 +121,155 @@ sr.reveal('.home__data, .about__img, .skills__subtitle, .skills__text',{});
 sr.reveal('.home__img, .about__subtitle, .about__text, .skills__img',{delay: 400}); 
 sr.reveal('.home__social-icon',{ interval: 200}); 
 sr.reveal('.skills__data, .work__img, .contact__input',{interval: 200}); 
+
+// Update theme toggle functionality
+const themeToggle = document.querySelector('.theme-toggle');
+const root = document.documentElement;
+
+function toggleTheme() {
+    const currentTheme = root.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    root.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    // Add animation class
+    themeToggle.classList.add('theme-toggle--active');
+    setTimeout(() => {
+        themeToggle.classList.remove('theme-toggle--active');
+    }, 300);
+}
+
+// Initialize theme
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    root.setAttribute('data-theme', savedTheme);
+});
+
+themeToggle.addEventListener('click', toggleTheme);
+
+// Wave Animation
+class WaterRipple {
+    constructor() {
+        this.canvas = document.getElementById('waveCanvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.width = this.canvas.width;
+        this.height = this.canvas.height;
+        this.lastMouse = { x: 0, y: 0 };
+        this.mouseForce = 0;
+        this.ripples = [];
+        this.autoRippleTimer = null;
+        this.maxRipples = 3;  // Limit maximum ripples
+        this.rippleInterval = 5000;  // Slower interval (5 seconds)
+        this.rippleSpeed = 2;  // Slower ripple speed
+        
+        this.init();
+    }
+
+    init() {
+        this.resize();
+        this.setupEventListeners();
+        this.startAutoRipples();
+        this.animate();
+    }
+
+    resize() {
+        this.width = this.canvas.width = this.canvas.offsetWidth;
+        this.height = this.canvas.height = this.canvas.offsetHeight;
+    }
+
+    setupEventListeners() {
+        window.addEventListener('resize', () => this.resize());
+        
+        this.canvas.addEventListener('mousemove', (e) => {
+            const rect = this.canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const force = Math.sqrt(
+                Math.pow(x - this.lastMouse.x, 2) +
+                Math.pow(y - this.lastMouse.y, 2)
+            ) * 0.1;
+            
+            if (force > 1) {
+                this.addRipple(x, y, force * 2);
+            }
+            
+            this.lastMouse = { x, y };
+        });
+
+        this.canvas.addEventListener('click', (e) => {
+            const rect = this.canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            this.addRipple(x, y, 25);
+        });
+    }
+
+    startAutoRipples() {
+        this.autoRippleTimer = setInterval(() => {
+            // Only add new ripple if we're under the limit
+            if (this.ripples.length < this.maxRipples) {
+                const x = Math.random() * this.width;
+                const y = Math.random() * this.height;
+                const size = 5 + Math.random() * 10;
+                this.addRipple(x, y, size);
+            }
+        }, this.rippleInterval);
+    }
+
+    addRipple(x, y, size) {
+        // Only add if we're under the limit
+        if (this.ripples.length < this.maxRipples) {
+            this.ripples.push({
+                x,
+                y,
+                size,
+                opacity: 1,
+                maxRadius: size * 15,  // Larger max radius
+                radius: 0,
+                speed: this.rippleSpeed
+            });
+        }
+    }
+
+    animate() {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        
+        // Draw water background
+        this.ctx.fillStyle = getComputedStyle(document.documentElement)
+            .getPropertyValue('--bg-color');
+        this.ctx.fillRect(0, 0, this.width, this.height);
+
+        // Update and draw ripples
+        for (let i = this.ripples.length - 1; i >= 0; i--) {
+            const ripple = this.ripples[i];
+            
+            ripple.radius += ripple.speed;
+            ripple.opacity -= 0.005;  // Slower fade out
+            
+            if (ripple.opacity <= 0 || ripple.radius >= ripple.maxRadius) {
+                this.ripples.splice(i, 1);
+                continue;
+            }
+
+            this.ctx.beginPath();
+            this.ctx.strokeStyle = `rgba(${this.getRippleColor()}, ${ripple.opacity})`;
+            this.ctx.lineWidth = 2;
+            this.ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+
+        requestAnimationFrame(() => this.animate());
+    }
+
+    getRippleColor() {
+        const theme = document.documentElement.getAttribute('data-theme');
+        return theme === 'dark' ? '255, 255, 255' : '26, 26, 26';
+    }
+}
+
+// Remove the old WaveAnimation initialization and only use WaterRipple
+document.addEventListener('DOMContentLoaded', () => {
+    new WaterRipple();
+});

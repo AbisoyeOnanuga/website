@@ -32,7 +32,7 @@
   --second-dark: #e0e0e0;
   --bg-light: #ffffff;
   --text-light: #1a1a1a;
-  --second-light: #4a4a4a;
+  --second-light: #333333;
   --accent-dark: #4CAF50;
   --accent-light: #45a049;
   --footer-light: #2d2d2d;
@@ -682,7 +682,7 @@ header a {
 [data-theme="light"] {
     --bg-color: var(--bg-light);
     --text-color: var(--text-light);
-    --second-color: var(--second-light);
+    --second-color: var(--text-light);
     --accent-color: var(--accent-light);
 }
 
@@ -787,7 +787,7 @@ header a {
     max-width: 1400px;
     margin: 0 auto;
     padding: var(--header-padding);
-    height: var(--header-height);
+    min-height: fit-content;
 }
 
 /* Logo Section */

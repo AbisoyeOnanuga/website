@@ -162,6 +162,8 @@ class WaterRipple {
         this.maxRipples = 3;  // Limit maximum ripples
         this.rippleInterval = 5000;  // Slower interval (5 seconds)
         this.rippleSpeed = 2;  // Slower ripple speed
+        this.rippleSpacing = 50;  // Minimum spacing between ripples
+        this.mouseForceMultiplier = 0.3;  // Increased mouse force
         
         this.init();
     }
@@ -186,13 +188,22 @@ class WaterRipple {
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
-            const force = Math.sqrt(
-                Math.pow(x - this.lastMouse.x, 2) +
-                Math.pow(y - this.lastMouse.y, 2)
-            ) * 0.1;
+            const dx = x - this.lastMouse.x;
+            const dy = y - this.lastMouse.y;
+            const speed = Math.sqrt(dx * dx + dy * dy);
             
-            if (force > 1) {
-                this.addRipple(x, y, force * 2);
+            if (speed > 1) {
+                const force = Math.min(speed * this.mouseForceMultiplier, 30);
+                this.addRipple(x, y, force);
+                
+                // Add smaller trailing ripples
+                if (speed > 5) {
+                    for (let i = 1; i <= 2; i++) {
+                        const trailX = this.lastMouse.x + (dx * (i / 3));
+                        const trailY = this.lastMouse.y + (dy * (i / 3));
+                        this.addRipple(trailX, trailY, force * 0.5);
+                    }
+                }
             }
             
             this.lastMouse = { x, y };
@@ -208,25 +219,31 @@ class WaterRipple {
 
     startAutoRipples() {
         this.autoRippleTimer = setInterval(() => {
-            // Only add new ripple if we're under the limit
             if (this.ripples.length < this.maxRipples) {
                 const x = Math.random() * this.width;
                 const y = Math.random() * this.height;
-                const size = 5 + Math.random() * 10;
+                const size = 8 + Math.random() * 12;  // Larger random ripples
                 this.addRipple(x, y, size);
             }
         }, this.rippleInterval);
     }
 
     addRipple(x, y, size) {
-        // Only add if we're under the limit
-        if (this.ripples.length < this.maxRipples) {
+        // Check spacing from existing ripples
+        const isTooClose = this.ripples.some(ripple => {
+            const dx = x - ripple.x;
+            const dy = y - ripple.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            return distance < this.rippleSpacing;
+        });
+
+        if (!isTooClose && this.ripples.length < this.maxRipples) {
             this.ripples.push({
                 x,
                 y,
                 size,
                 opacity: 1,
-                maxRadius: size * 15,  // Larger max radius
+                maxRadius: size * 20,  // Increased max radius
                 radius: 0,
                 speed: this.rippleSpeed
             });

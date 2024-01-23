@@ -164,7 +164,6 @@ header a {
   width: 100%;
   background: var(--bg-color);
   z-index: var(--z-fixed);
-  border-bottom: var(--box-border);
 }
 
 /*===== NAV =====*/
@@ -787,7 +786,7 @@ header a {
     max-width: 1400px;
     margin: 0 auto;
     padding: var(--header-padding);
-    min-height: fit-content;
+    height: fit-content;
 }
 
 /* Logo Section */

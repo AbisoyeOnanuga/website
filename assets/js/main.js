@@ -159,10 +159,10 @@ class WaterRipple {
         this.mouseForce = 0;
         this.ripples = [];
         this.autoRippleTimer = null;
-        this.maxRipples = 3;  // Limit maximum ripples
+        this.maxRipples = 5;  // Limit maximum ripples
         this.rippleInterval = 5000;  // Slower interval (5 seconds)
         this.rippleSpeed = 2;  // Slower ripple speed
-        this.rippleSpacing = 50;  // Minimum spacing between ripples
+        this.rippleSpacing = 300;  // Minimum spacing between ripples
         this.mouseForceMultiplier = 0.3;  // Increased mouse force
         
         this.init();

@@ -324,7 +324,118 @@ class WaterRipple {
     }
 }
 
-// Remove the old WaveAnimation initialization and only use WaterRipple
+// Add this new class for the blob animation
+class BlobAnimation {
+    constructor() {
+        this.paths = document.querySelectorAll('.blob-path, .blob-outline');
+        this.numPoints = 12;
+        this.centerX = 250;
+        this.centerY = 250;
+        this.minRadius = 200;
+        this.maxRadius = 230;
+        this.minSpeed = 0.0005;
+        this.maxSpeed = 0.001;
+        this.points = [];
+        this.time = 0;
+        this.mouse = { x: this.centerX, y: this.centerY };
+        this.mouseInfluence = 0.1;
+        
+        this.init();
+        this.setupEventListeners();
+    }
+
+    init() {
+        // Initialize points with random angles and radiuses
+        for (let i = 0; i < this.numPoints; i++) {
+            const angle = (i / this.numPoints) * Math.PI * 2;
+            const radius = this.minRadius + Math.random() * (this.maxRadius - this.minRadius);
+            const speed = this.minSpeed + Math.random() * (this.maxSpeed - this.minSpeed);
+            
+            this.points.push({
+                angle,
+                radius,
+                speed,
+                x: 0,
+                y: 0,
+                originalRadius: radius
+            });
+        }
+
+        this.animate();
+    }
+
+    setupEventListeners() {
+        document.querySelector('.portrait-container').addEventListener('mousemove', (e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 500;
+            const y = ((e.clientY - rect.top) / rect.height) * 500;
+            this.mouse = { x, y };
+        });
+    }
+
+    updatePoints() {
+        this.time += 0.001;
+        
+        this.points.forEach(point => {
+            // Add smooth wave motion
+            const wave = Math.sin(this.time * 3 + point.angle * 2) * 15;
+            
+            // Add mouse influence
+            const dx = this.mouse.x - this.centerX;
+            const dy = this.mouse.y - this.centerY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const mouseEffect = Math.max(0, 1 - distance / 200) * this.mouseInfluence;
+            
+            // Calculate point position with both wave and mouse influence
+            const angleToMouse = Math.atan2(this.mouse.y - this.centerY, this.mouse.x - this.centerX);
+            const mouseWave = Math.cos(point.angle - angleToMouse) * distance * mouseEffect;
+            
+            point.radius = point.originalRadius + wave + mouseWave;
+            
+            // Calculate x and y positions
+            point.x = this.centerX + Math.cos(point.angle) * point.radius;
+            point.y = this.centerY + Math.sin(point.angle) * point.radius;
+            
+            // Rotate points very slowly
+            point.angle += point.speed * 0.5;
+        });
+    }
+
+    createPath() {
+        let path = `M ${this.points[0].x} ${this.points[0].y}`;
+        
+        for (let i = 0; i < this.points.length; i++) {
+            const current = this.points[i];
+            const next = this.points[(i + 1) % this.points.length];
+            const next2 = this.points[(i + 2) % this.points.length];
+            
+            // Use cubic Bezier curves for smoother edges
+            const cx1 = current.x + (next.x - current.x) * 0.6;
+            const cy1 = current.y + (next.y - current.y) * 0.6;
+            const cx2 = next.x - (next2.x - current.x) * 0.2;
+            const cy2 = next.y - (next2.y - current.y) * 0.2;
+            
+            path += ` C ${cx1} ${cy1}, ${cx2} ${cy2}, ${next.x} ${next.y}`;
+        }
+        
+        path += 'Z';
+        return path;
+    }
+
+    animate = () => {
+        this.updatePoints();
+        const path = this.createPath();
+        
+        this.paths.forEach(pathElement => {
+            pathElement.setAttribute('d', path);
+        });
+        
+        requestAnimationFrame(this.animate);
+    }
+}
+
+// Initialize blob animation after DOM loads
 document.addEventListener('DOMContentLoaded', () => {
     new WaterRipple();
+    new BlobAnimation();
 });

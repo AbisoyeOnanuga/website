@@ -1,5 +1,7 @@
 # About
 A website for my portfolio of Design and Frontend projects</br></br>
 ## projects
-- <a href="https://coda.io/@abisoye-onanuga/startup-lab">Coda AI Startup template</a>
-- <a href="https://coda.io/@abisoye-onanuga/startup-lab">Voiceflow Influencer-matching Chatbot</a>
+- [Creative PromptR: a creative writing assistant prompt-engineered in PartyRockAWS app](https://partyrock.aws/u/Abisoye/8FlIHJ8oD/Creative-PromptR)
+- [Roll-Play: a generative playlist prompt-engineered in PartyRockAWS app](https://partyrock.aws/u/Abisoye/eL_jMoAg5/Roll-Play%3A-Generate-your-next-Playlist)
+- [Startup Lab: Coda AI startup pitch deck tool](https://coda.io/@abisoye-onanuga/startup-lab)
+- [PartnerUp: a voiceflow Influencer-matching Chatbot](https://creator.voiceflow.com/prototype/659ec9eb59d399715077b040)

@@ -25,7 +25,7 @@
   --z-back: -10;
   --z-fixed: 100;
 }
-@media screen and (min-width: 968px) {
+@media screen and (min-width: 1000px) {
   :root {
     --big-font-size: 3.5rem;
     --h2-font-size: 2rem;
@@ -98,7 +98,7 @@ img {
 
 /*===== LAYOUT =====*/
 .bd-grid {
-  max-width: 1024px;
+  max-width: 1128px;
   display: grid;
   margin-left: var(--mb-2);
   margin-right: var(--mb-2);
@@ -190,6 +190,19 @@ img {
 .home__title {
   font-size: var(--big-font-size);
   margin-bottom: var(--mb-5);
+}
+.typing-container {
+  color: var(--first-color);
+  border-right: 2px solid;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.typing-container::after {
+  content: '|';
+  animation: blink 1s infinite;
+}
+@keyframes blink {
+  50% { opacity: 0; }
 }
 .home__title-color {
   color: var(--first-color);

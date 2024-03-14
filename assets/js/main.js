@@ -21,6 +21,41 @@ function linkAction(){
 }
 navLink.forEach(n => n.addEventListener('click', linkAction))
 
+/*==================== TYPING EFFECT ====================*/
+const words = ['designer', 'data analyst', 'LLM enthusiast', 'mentor'];
+const typingContainer = document.querySelector('.typing-container');
+let wordIndex = 0;
+let letterIndex = 0;
+let currentWord = '';
+let isDeleting = false;
+
+function type() {
+  if (isDeleting) {
+    currentWord = words[wordIndex].substring(0, currentWord.length - 1);
+  } else {
+    currentWord = words[wordIndex].substring(0, letterIndex + 1);
+  }
+  typingContainer.textContent = currentWord;
+  letterIndex = isDeleting ? letterIndex - 1 : letterIndex + 1;
+
+  if (!isDeleting && currentWord === words[wordIndex]) {
+    // Word is complete, pause before starting to delete
+    setTimeout(() => { isDeleting = true; }, 2000);
+  } else if (isDeleting && currentWord === '') {
+    // Word is deleted, move to the next word
+    isDeleting = false;
+    wordIndex = (wordIndex + 1) % words.length;
+  }
+
+  let typingSpeed = 200 - Math.random() * 100; // Speed up typing
+  if (isDeleting) typingSpeed /= 2; // Speed up deleting
+
+  setTimeout(type, typingSpeed);
+}
+
+// Start typing effect
+type();
+
 /*==================== SCROLL SECTIONS ACTIVE LINK ====================*/
 const sections = document.querySelectorAll('section[id]')
 

@@ -4,10 +4,10 @@
 :root {
   --header-height: 3rem;
   --font-semi: 600;
-  /*===== Colores =====*/
-  /*Purple 260 - Red 355 - Blue 224 - Pink 340*/
-  /* HSL color mode */
-  --hue-color: 224;
+  /*===== Colours =====*/
+  /*Purple 260 - Green 120 - Red 355 - Blue 224 - Pink 340*/
+  /* Hue colour mode */
+  --hue-color: 120;
   --first-color: hsl(var(--hue-color), 89%, 60%);
   --second-color: hsl(var(--hue-color), 56%, 12%);
   /*===== Fuente y tipografia =====*/
@@ -16,7 +16,7 @@
   --h2-font-size: 1.25rem;
   --normal-font-size: .938rem;
   --smaller-font-size: .75rem;
-  /*===== Margenes =====*/
+  /*===== Margins =====*/
   --mb-2: 1rem;
   --mb-4: 2rem;
   --mb-5: 2.5rem;
@@ -252,7 +252,11 @@ img {
 
 /* ===== SKILLS =====*/
 .skills__container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 2.5rem;
   row-gap: 2rem;
+  column-count: 2;
   text-align: center;
 }
 .skills__subtitle {
@@ -271,6 +275,8 @@ img {
   margin-bottom: var(--mb-4);
   border-radius: 0.5rem;
   box-shadow: 0px 4px 25px rgba(14, 36, 49, 0.15);
+  width: 200px;
+  break-inside: avoid;
 }
 .skills__icon {
   font-size: 2rem;

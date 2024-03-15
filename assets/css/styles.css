@@ -1,5 +1,5 @@
 /*===== GOOGLE FONTS =====*/
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
 /*===== VARIABLES CSS =====*/
 :root {
   --header-height: 3rem;
@@ -11,7 +11,7 @@
   --first-color: hsl(var(--hue-color), 72%, 52%);
   --second-color: hsl(var(--hue-color), 50%, 10%);
   /*===== Fuente y tipografia =====*/
-  --body-font: "Poppins", sans-serif;
+  --body-font: "League Spartan", sans-serif;
   --big-font-size: 2rem;
   --h2-font-size: 1.25rem;
   --normal-font-size: .938rem;
@@ -29,8 +29,8 @@
   :root {
     --big-font-size: 3.5rem;
     --h2-font-size: 2rem;
-    --normal-font-size: 1rem;
-    --smaller-font-size: .875rem;
+    --normal-font-size: 1.1rem;
+    --smaller-font-size: 0.9rem;
   }
 }
 
@@ -44,6 +44,7 @@ html {
 }
 
 body {
+  font-optical-sizing: auto;
   margin: var(--header-height) 0 0 0;
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
@@ -272,6 +273,15 @@ img {
   row-gap: 2rem;
   column-count: 2;
   text-align: center;
+}
+.skills__row {
+  display: flex;
+  gap: 20px;
+}
+.skills__table{
+  width: 100%;
+  justify-content: center;
+  align-items: center;
 }
 .skills__subtitle {
   margin-bottom: var(--mb-2);

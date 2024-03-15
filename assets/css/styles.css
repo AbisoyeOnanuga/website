@@ -194,13 +194,14 @@ img {
 .typing-container {
   color: var(--first-color);
   border-right: 2px solid;
-  white-space: nowrap;
+  white-space: wrap;
   overflow: hidden;
+  margin-left: 13px;
 }
-.typing-container::after {
+/*.typing-container::after {
   content: '|';
   animation: blink 1s infinite;
-}
+}*/
 @keyframes blink {
   50% { opacity: 0; }
 }

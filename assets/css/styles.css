@@ -99,7 +99,7 @@ img {
 
 /*===== LAYOUT =====*/
 .bd-grid {
-  max-width: 1128px;
+  max-width: 1024px;
   display: grid;
   margin-left: var(--mb-2);
   margin-right: var(--mb-2);
@@ -195,9 +195,13 @@ img {
 .typing-container {
   color: var(--first-color);
   border-right: 2px solid;
-  white-space: wrap;
+  white-space: normal;
   overflow: hidden;
   margin-left: 13px;
+}
+@keyframes blink {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: black; }
 }
 /*.typing-container::after {
   content: '|';
@@ -257,6 +261,12 @@ img {
 .about__subtitle {
   margin-bottom: var(--mb-2);
 }
+.nowrap {
+  white-space: nowrap;
+}
+.about__text {
+  text-align: justify;
+}
 .about__img {
   justify-self: center;
 }
@@ -275,10 +285,13 @@ img {
   text-align: center;
 }
 .skills__row {
-  display: flex;
   gap: 20px;
+  margin: auto;
 }
 .skills__table{
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 0rem;
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -288,10 +301,11 @@ img {
 }
 .skills__text {
   margin-bottom: var(--mb-4);
+  text-align: left;
 }
 .skills__data {
   display: flex;
-  justify-content: space-between;
+  justify-content: left;
   align-items: center;
   position: relative;
   font-weight: var(--font-semi);
@@ -446,7 +460,22 @@ img {
     justify-items: center;
   }
 }
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 992px) {
+  .bd-grid {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .home {
+    padding: 10rem 0 2rem;
+  }
+  .home__img {
+    width: 450px;
+  }
+}
+@media screen and (min-width: 600px) {
+  .skills__table {
+    grid-template-columns: repeat(3, 1fr); /* Switch to three columns */
+  }
   body {
     margin: 0;
   }
@@ -500,17 +529,5 @@ img {
   .work__container {
     grid-template-columns: repeat(3, 1fr);
     column-gap: 2rem;
-  }
-}
-@media screen and (min-width: 992px) {
-  .bd-grid {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .home {
-    padding: 10rem 0 2rem;
-  }
-  .home__img {
-    width: 450px;
   }
 }

@@ -7,9 +7,9 @@
   /*===== Colours =====*/
   /*Purple 260 - Green 120 - Red 355 - Blue 224 - Pink 340*/
   /* Hue colour mode */
-  --hue-color: 120;
-  --first-color: hsl(var(--hue-color), 89%, 60%);
-  --second-color: hsl(var(--hue-color), 56%, 12%);
+  --hue-color: 121;
+  --first-color: hsl(var(--hue-color), 72%, 52%);
+  --second-color: hsl(var(--hue-color), 50%, 10%);
   /*===== Fuente y tipografia =====*/
   --body-font: "Poppins", sans-serif;
   --big-font-size: 2rem;

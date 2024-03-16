@@ -295,6 +295,7 @@ img {
   width: 100%;
   justify-content: center;
   align-items: center;
+  margin-top: 30px;
 }
 .skills__subtitle {
   margin-bottom: var(--mb-2);
@@ -348,6 +349,10 @@ img {
 }
 .skills__img {
   border-radius: 0.5rem;
+  max-width: 300px;
+  margin: auto;
+  opacity: 1; /* Start with the image fully visible */
+  transition: opacity 1.5s ease-in-out; /* Smooth transition for the opacity */
 }
 
 /* ===== WORK =====*/

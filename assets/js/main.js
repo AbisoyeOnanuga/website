@@ -55,6 +55,37 @@ function type() {
 
 // Start typing effect
 type();
+/*==================== WORK SLIDESHOW ====================*/
+// Array of image sources
+const images = [
+    'assets/img/workf.png',
+    'assets/img/worke.png',
+    'assets/img/workd.png',
+    // Add more image paths as needed
+  ];
+  
+  // The index of the current image
+  let currentIndex = 0;
+  
+  // Function to cycle to the next image
+  function nextImage() {
+    const imgElement = document.querySelector('.skills__img');
+    
+    // Fade out the current image
+    imgElement.style.opacity = 0;
+  
+    // Wait for the fade-out transition to finish before changing the image source
+    setTimeout(() => {
+      currentIndex = (currentIndex + 1) % images.length;
+      imgElement.src = images[currentIndex];
+  
+      // Fade in the new image
+      imgElement.style.opacity = 1;
+    }, 1500); // This timeout duration should match the CSS transition duration
+  }
+  
+  // Set the interval for changing images (e.g., 3000ms = 3 seconds)
+  setInterval(nextImage, 5000);
 
 /*==================== SCROLL SECTIONS ACTIVE LINK ====================*/
 const sections = document.querySelectorAll('section[id]')

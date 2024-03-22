@@ -367,6 +367,12 @@ img {
 }
 .work__img img {
   transition: 1s;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  display: block;
+  width: 100%;
+  height: auto;
 }
 .work__img img:hover {
   transform: scale(1.1);
@@ -390,6 +396,32 @@ img {
 }
 .work__img:hover::after {
   opacity: 1;
+}
+
+/* ===== AWARDS =====*/
+.award__container {
+  padding: 2rem;
+  background: #f8f8f8; /* Light background for the container */
+}
+.award__container ul {
+  list-style: none; /* Removes default bullets */
+  padding: 0;
+}
+.award__container li {
+  background: linear-gradient(135deg, #e4e4e4 0%, #ffffff 100%); /* Subtle gradient for each item */
+  margin-bottom: 1rem; /* Space between items */
+  padding: 1rem; /* Padding inside each item */
+  border-left: 4px solid #008000; /* Left border for a touch of color */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Soft shadow for depth */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+}
+.award__container li:hover {
+  transform: translateY(-5px); /* Slight raise effect on hover */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Enhanced shadow on hover */
+}
+.section-title {
+  text-align: center; /* Center align the section title */
+  margin-bottom: 2rem; /* Space after the title */
 }
 
 /* ===== CONTACT =====*/
@@ -437,6 +469,21 @@ img {
 }
 
 /* ===== MEDIA QUERIES=====*/
+/* Hover effect for non-touch devices with a width of 600px and above */
+@media (hover: hover) and (min-width: 600px) {
+  .work__img:hover::after {
+    opacity: 1;
+  }
+  .work__img:hover img {
+    transform: scale(1.05);
+  }
+}
+/* Always visible labels for touch devices and screens smaller than 600px */
+@media (hover: none), (max-width: 599px) {
+  .work__img::after {
+    opacity: 1;
+  }
+}
 @media screen and (min-width: 992px) {
   .bd-grid {
     margin-left: auto;
@@ -511,10 +558,6 @@ img {
   .work__img img::after {
     opacity: 1; /* Always show the label on mobile */
   }
-
-  .work__img img:hover {
-    transform: none; /* Disable zoom effect on mobile */
-  }
 }
 @media screen and (min-width: 576px) {
   .home {
@@ -557,9 +600,7 @@ img {
     justify-items: center;
   }
 }
-
-
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 360px) {
   .home {
     row-gap: 2rem;
   }

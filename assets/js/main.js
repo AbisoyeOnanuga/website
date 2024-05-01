@@ -22,7 +22,7 @@ function linkAction(){
 navLink.forEach(n => n.addEventListener('click', linkAction))
 
 /*==================== TYPING EFFECT ====================*/
-const words = ['designer', 'data enthusiast', 'keyboard-enjoyer'];
+const words = ['designer','mentor', 'technical artist'];
 const typingContainer = document.querySelector('.typing-container');
 let wordIndex = 0;
 let letterIndex = 0;

@@ -61,14 +61,31 @@ ul {
   list-style: none;
 }
 
-a {
-  text-decoration: none;
-}
-
 img {
   max-width: 100%;
   height: auto;
   display: block;
+}
+
+/* ===== Links ====== */
+
+.footer a {
+  text-decoration: none;
+  color: #adebad; /* Light green color for links */
+}
+
+.footer a:visited {
+  color: #adebad; /* Keeps visited links light green */
+}
+
+.footer a:hover {
+  color: #ffffff; /* White color on hover for contrast */
+  text-decoration: underline; /* Adds underline on hover */
+}
+
+.footer a:active {
+  color: #ffcc00; /* Bright color for active/clicked state */
+  text-decoration: none;
 }
 
 /*===== CLASS CSS ===== */

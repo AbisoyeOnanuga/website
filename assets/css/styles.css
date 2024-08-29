@@ -77,6 +77,10 @@ header a {
   text-decoration: none;
 }
 
+.home {
+  text-decoration: none;
+}
+
 .footer a {
   text-decoration: none;
   color: #adebad; /* Light green color for links */

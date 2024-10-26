@@ -69,6 +69,10 @@ img {
 
 /* ===== Links ====== */
 
+a:-webkit-any-link {
+  text-decoration: none;
+}
+
 .footer a {
   text-decoration: none;
   color: #adebad; /* Light green color for links */

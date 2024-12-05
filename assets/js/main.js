@@ -144,6 +144,18 @@ function toggleTheme() {
 document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme') || 'light';
     root.setAttribute('data-theme', savedTheme);
+    
+    // Initialize water ripple
+    const canvas = document.getElementById('waveCanvas');
+    if (canvas) {
+        new WaterRipple();
+    }
+    
+    // Initialize blob animation
+    const blobPaths = document.querySelectorAll('.blob-path, .blob-outline');
+    if (blobPaths.length) {
+        new BlobAnimation();
+    }
 });
 
 themeToggle.addEventListener('click', toggleTheme);
@@ -159,14 +171,16 @@ class WaterRipple {
         this.mouseForce = 1;
         this.ripples = [];
         this.autoRippleTimer = null;
-        this.maxRipples = 5;
-        this.rippleInterval = 5000;
+        this.maxRipples = 8;  // Allow more ripples
+        this.rippleInterval = 4000;
         this.rippleSpeed = 1.5;
         this.rippleSpacing = 400;
-        this.mouseForceMultiplier = 1.5;
+        this.mouseForceMultiplier = 2;
         this.rippleDecay = 0.003;
         this.rippleLineWidth = 1;
         this.padding = 50;
+        this.trailCount = 4;  // More trailing ripples
+        this.trailDelay = 2;  // Faster trail generation
         
         this.init();
     }
@@ -189,6 +203,8 @@ class WaterRipple {
     setupEventListeners() {
         window.addEventListener('resize', () => this.resize());
         
+        let lastTrailTime = 0;
+        
         this.canvas.addEventListener('mousemove', (e) => {
             const rect = this.canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -198,17 +214,19 @@ class WaterRipple {
             const dy = y - this.lastMouse.y;
             const speed = Math.sqrt(dx * dx + dy * dy);
             
+            const now = Date.now();
             if (speed > 1) {
-                const force = Math.min(speed * this.mouseForceMultiplier, 30);
+                const force = Math.min(speed * this.mouseForceMultiplier, 35);
                 this.addRipple(x, y, force);
                 
-                // Add smaller trailing ripples
-                if (speed > 5) {
-                    for (let i = 1; i <= 2; i++) {
-                        const trailX = this.lastMouse.x + (dx * (i / 3));
-                        const trailY = this.lastMouse.y + (dy * (i / 3));
-                        this.addRipple(trailX, trailY, force * 0.5);
+                // Add more trailing ripples
+                if (speed > 3 && now - lastTrailTime > this.trailDelay) {
+                    for (let i = 1; i <= this.trailCount; i++) {
+                        const trailX = this.lastMouse.x + (dx * (i / (this.trailCount + 1)));
+                        const trailY = this.lastMouse.y + (dy * (i / (this.trailCount + 1)));
+                        this.addRipple(trailX, trailY, force * (1 - i / (this.trailCount + 1)));
                     }
+                    lastTrailTime = now;
                 }
             }
             
@@ -328,20 +346,16 @@ class WaterRipple {
 class BlobAnimation {
     constructor() {
         this.paths = document.querySelectorAll('.blob-path, .blob-outline');
-        this.numPoints = 24;  // Increased points for smoother edges
+        this.numPoints = 5;  // Reduced number of points
         this.centerX = 250;
         this.centerY = 250;
-        this.minRadius = 180;
-        this.maxRadius = 200;
-        this.minSpeed = 0.0003;
-        this.maxSpeed = 0.0006;
+        this.baseRadius = 200;  // Slightly larger
         this.points = [];
         this.time = 0;
         this.mouse = { x: this.centerX, y: this.centerY };
-        this.mouseInfluence = 0.15;
-        this.tension = 0.3;  // Controls curve smoothness
-        this.dampening = 0.92;  // Prevents over-distortion
-        this.velocities = [];  // Add velocity for fluid motion
+        this.mouseInfluence = 0.25;  // Increased mouse influence
+        this.morphSpeed = 0.003;  // Slightly faster morphing
+        this.noiseScale = 0.5;
         
         this.init();
         this.setupEventListeners();
@@ -350,102 +364,79 @@ class BlobAnimation {
     init() {
         for (let i = 0; i < this.numPoints; i++) {
             const angle = (i / this.numPoints) * Math.PI * 2;
-            const radius = this.minRadius + Math.random() * (this.maxRadius - this.minRadius);
-            const speed = this.minSpeed + Math.random() * (this.maxSpeed - this.minSpeed);
-            
             this.points.push({
-                angle,
-                radius,
-                speed,
+                baseAngle: angle,
+                angle: angle,
+                radius: this.baseRadius,
+                noiseOffset: Math.random() * 1000,
                 x: 0,
-                y: 0,
-                originalRadius: radius,
-                targetRadius: radius
+                y: 0
             });
-            
-            this.velocities.push({ x: 0, y: 0 });
         }
-
         this.animate();
     }
 
     setupEventListeners() {
         const container = document.querySelector('.portrait-container');
-        let isMouseOver = false;
-
         container.addEventListener('mousemove', (e) => {
             const rect = container.getBoundingClientRect();
             const x = ((e.clientX - rect.left) / rect.width) * 500;
             const y = ((e.clientY - rect.top) / rect.height) * 500;
             this.mouse = { x, y };
-            isMouseOver = true;
         });
 
         container.addEventListener('mouseleave', () => {
-            isMouseOver = false;
-            // Smoothly return to original shape
-            this.points.forEach(point => {
-                point.targetRadius = point.originalRadius;
-            });
+            this.mouse = { x: this.centerX, y: this.centerY };
         });
     }
 
+    noise(x, y) {
+        // Simple Perlin-like noise simulation
+        return Math.sin(x * this.noiseScale) * Math.cos(y * this.noiseScale) * 30;
+    }
+
     updatePoints() {
-        this.time += 0.001;
+        this.time += this.morphSpeed;
         
-        this.points.forEach((point, i) => {
-            // Base wave motion
-            const wave = Math.sin(this.time * 2 + point.angle * 3) * 8;
+        const dx = this.mouse.x - this.centerX;
+        const dy = this.mouse.y - this.centerY;
+        const mouseDistance = Math.sqrt(dx * dx + dy * dy);
+        const mouseAngle = Math.atan2(dy, dx);
+        
+        this.points.forEach(point => {
+            // Organic morphing
+            const noiseX = Math.cos(point.baseAngle) * 2 + this.time;
+            const noiseY = Math.sin(point.baseAngle) * 2 + this.time;
+            const morphing = this.noise(noiseX, noiseY);
             
-            // Mouse influence with smooth transition
-            const dx = this.mouse.x - this.centerX;
-            const dy = this.mouse.y - this.centerY;
-            const distanceToMouse = Math.sqrt(dx * dx + dy * dy);
-            const angleToMouse = Math.atan2(dy, dx);
+            // Enhanced mouse interaction
+            const angleToMouse = Math.abs(point.baseAngle - mouseAngle) % (Math.PI * 2);
+            const mouseEffect = Math.max(0, 1 - mouseDistance / 250);  // Increased range
+            const mousePull = mouseEffect * this.mouseInfluence * 70 * 
+                            Math.exp(-angleToMouse * 2);
             
-            // Calculate target radius with mouse influence
-            const mouseEffect = Math.max(0, 1 - distanceToMouse / 250);
-            const mousePull = Math.cos(point.angle - angleToMouse) * mouseEffect * this.mouseInfluence * 60;
-            point.targetRadius = point.originalRadius + wave + mousePull;
-
-            // Smooth radius transition
-            const radiusDiff = point.targetRadius - point.radius;
-            point.radius += radiusDiff * 0.1;
-
-            // Update position with velocity
-            const targetX = this.centerX + Math.cos(point.angle) * point.radius;
-            const targetY = this.centerY + Math.sin(point.angle) * point.radius;
-            
-            this.velocities[i].x = (this.velocities[i].x + (targetX - point.x) * 0.1) * this.dampening;
-            this.velocities[i].y = (this.velocities[i].y + (targetY - point.y) * 0.1) * this.dampening;
-            
-            point.x += this.velocities[i].x;
-            point.y += this.velocities[i].y;
-
-            // Very slow rotation
-            point.angle += point.speed * 0.2;
+            point.radius = this.baseRadius + morphing + mousePull;
+            point.x = this.centerX + Math.cos(point.baseAngle) * point.radius;
+            point.y = this.centerY + Math.sin(point.baseAngle) * point.radius;
         });
     }
 
     createPath() {
-        const points = [...this.points, this.points[0], this.points[1]]; // Add extra points for smooth closing
+        const points = [...this.points, ...this.points.slice(0, 2)];
         let path = `M ${points[0].x} ${points[0].y}`;
         
-        for (let i = 1; i < points.length - 2; i++) {
-            const current = points[i];
-            const next = points[i + 1];
+        for (let i = 0; i < points.length - 2; i++) {
+            const p0 = points[i];
+            const p1 = points[i + 1];
+            const p2 = points[i + 2];
             
-            // Calculate control points with tension
-            const dx = next.x - current.x;
-            const dy = next.y - current.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
+            // Calculate control points for smooth curves
+            const cx1 = p0.x + (p1.x - p0.x) * 0.6;
+            const cy1 = p0.y + (p1.y - p0.y) * 0.6;
+            const cx2 = p1.x - (p2.x - p1.x) * 0.4;
+            const cy2 = p1.y - (p2.y - p1.y) * 0.4;
             
-            const cx1 = current.x + dx * this.tension;
-            const cy1 = current.y + dy * this.tension;
-            const cx2 = next.x - dx * this.tension;
-            const cy2 = next.y - dy * this.tension;
-            
-            path += ` C ${cx1} ${cy1}, ${cx2} ${cy2}, ${next.x} ${next.y}`;
+            path += ` C ${cx1} ${cy1}, ${cx2} ${cy2}, ${p1.x} ${p1.y}`;
         }
         
         return path;
@@ -462,9 +453,3 @@ class BlobAnimation {
         requestAnimationFrame(this.animate);
     }
 }
-
-// Initialize blob animation after DOM loads
-document.addEventListener('DOMContentLoaded', () => {
-    new WaterRipple();
-    new BlobAnimation();
-});

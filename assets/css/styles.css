@@ -941,7 +941,7 @@ header a {
 .header__wave {
     position: relative;
     width: calc(100% + 2rem);
-    height: 180px;
+    height: 270px;
     margin: 2rem -1rem;
     border-top: var(--box-border);
     border-bottom: var(--box-border);

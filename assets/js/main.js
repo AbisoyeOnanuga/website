@@ -328,24 +328,26 @@ class WaterRipple {
 class BlobAnimation {
     constructor() {
         this.paths = document.querySelectorAll('.blob-path, .blob-outline');
-        this.numPoints = 12;
+        this.numPoints = 24;  // Increased points for smoother edges
         this.centerX = 250;
         this.centerY = 250;
-        this.minRadius = 200;
-        this.maxRadius = 230;
-        this.minSpeed = 0.0005;
-        this.maxSpeed = 0.001;
+        this.minRadius = 180;
+        this.maxRadius = 200;
+        this.minSpeed = 0.0003;
+        this.maxSpeed = 0.0006;
         this.points = [];
         this.time = 0;
         this.mouse = { x: this.centerX, y: this.centerY };
-        this.mouseInfluence = 0.1;
+        this.mouseInfluence = 0.15;
+        this.tension = 0.3;  // Controls curve smoothness
+        this.dampening = 0.92;  // Prevents over-distortion
+        this.velocities = [];  // Add velocity for fluid motion
         
         this.init();
         this.setupEventListeners();
     }
 
     init() {
-        // Initialize points with random angles and radiuses
         for (let i = 0; i < this.numPoints; i++) {
             const angle = (i / this.numPoints) * Math.PI * 2;
             const radius = this.minRadius + Math.random() * (this.maxRadius - this.minRadius);
@@ -357,68 +359,95 @@ class BlobAnimation {
                 speed,
                 x: 0,
                 y: 0,
-                originalRadius: radius
+                originalRadius: radius,
+                targetRadius: radius
             });
+            
+            this.velocities.push({ x: 0, y: 0 });
         }
 
         this.animate();
     }
 
     setupEventListeners() {
-        document.querySelector('.portrait-container').addEventListener('mousemove', (e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
+        const container = document.querySelector('.portrait-container');
+        let isMouseOver = false;
+
+        container.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
             const x = ((e.clientX - rect.left) / rect.width) * 500;
             const y = ((e.clientY - rect.top) / rect.height) * 500;
             this.mouse = { x, y };
+            isMouseOver = true;
+        });
+
+        container.addEventListener('mouseleave', () => {
+            isMouseOver = false;
+            // Smoothly return to original shape
+            this.points.forEach(point => {
+                point.targetRadius = point.originalRadius;
+            });
         });
     }
 
     updatePoints() {
         this.time += 0.001;
         
-        this.points.forEach(point => {
-            // Add smooth wave motion
-            const wave = Math.sin(this.time * 3 + point.angle * 2) * 15;
+        this.points.forEach((point, i) => {
+            // Base wave motion
+            const wave = Math.sin(this.time * 2 + point.angle * 3) * 8;
             
-            // Add mouse influence
+            // Mouse influence with smooth transition
             const dx = this.mouse.x - this.centerX;
             const dy = this.mouse.y - this.centerY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            const mouseEffect = Math.max(0, 1 - distance / 200) * this.mouseInfluence;
+            const distanceToMouse = Math.sqrt(dx * dx + dy * dy);
+            const angleToMouse = Math.atan2(dy, dx);
             
-            // Calculate point position with both wave and mouse influence
-            const angleToMouse = Math.atan2(this.mouse.y - this.centerY, this.mouse.x - this.centerX);
-            const mouseWave = Math.cos(point.angle - angleToMouse) * distance * mouseEffect;
+            // Calculate target radius with mouse influence
+            const mouseEffect = Math.max(0, 1 - distanceToMouse / 250);
+            const mousePull = Math.cos(point.angle - angleToMouse) * mouseEffect * this.mouseInfluence * 60;
+            point.targetRadius = point.originalRadius + wave + mousePull;
+
+            // Smooth radius transition
+            const radiusDiff = point.targetRadius - point.radius;
+            point.radius += radiusDiff * 0.1;
+
+            // Update position with velocity
+            const targetX = this.centerX + Math.cos(point.angle) * point.radius;
+            const targetY = this.centerY + Math.sin(point.angle) * point.radius;
             
-            point.radius = point.originalRadius + wave + mouseWave;
+            this.velocities[i].x = (this.velocities[i].x + (targetX - point.x) * 0.1) * this.dampening;
+            this.velocities[i].y = (this.velocities[i].y + (targetY - point.y) * 0.1) * this.dampening;
             
-            // Calculate x and y positions
-            point.x = this.centerX + Math.cos(point.angle) * point.radius;
-            point.y = this.centerY + Math.sin(point.angle) * point.radius;
-            
-            // Rotate points very slowly
-            point.angle += point.speed * 0.5;
+            point.x += this.velocities[i].x;
+            point.y += this.velocities[i].y;
+
+            // Very slow rotation
+            point.angle += point.speed * 0.2;
         });
     }
 
     createPath() {
-        let path = `M ${this.points[0].x} ${this.points[0].y}`;
+        const points = [...this.points, this.points[0], this.points[1]]; // Add extra points for smooth closing
+        let path = `M ${points[0].x} ${points[0].y}`;
         
-        for (let i = 0; i < this.points.length; i++) {
-            const current = this.points[i];
-            const next = this.points[(i + 1) % this.points.length];
-            const next2 = this.points[(i + 2) % this.points.length];
+        for (let i = 1; i < points.length - 2; i++) {
+            const current = points[i];
+            const next = points[i + 1];
             
-            // Use cubic Bezier curves for smoother edges
-            const cx1 = current.x + (next.x - current.x) * 0.6;
-            const cy1 = current.y + (next.y - current.y) * 0.6;
-            const cx2 = next.x - (next2.x - current.x) * 0.2;
-            const cy2 = next.y - (next2.y - current.y) * 0.2;
+            // Calculate control points with tension
+            const dx = next.x - current.x;
+            const dy = next.y - current.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            const cx1 = current.x + dx * this.tension;
+            const cy1 = current.y + dy * this.tension;
+            const cx2 = next.x - dx * this.tension;
+            const cy2 = next.y - dy * this.tension;
             
             path += ` C ${cx1} ${cy1}, ${cx2} ${cy2}, ${next.x} ${next.y}`;
         }
         
-        path += 'Z';
         return path;
     }
 

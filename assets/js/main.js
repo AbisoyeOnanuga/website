@@ -291,12 +291,13 @@ class RippleEffect {
         this.canvas.height = 270;
         
         this.ripples = [];
-        this.maxRipples = 15;  // Increased from 5 to 15 to allow more ripples
+        this.baseVelocity = 2;  // Base velocity for all ripples
+        this.maxRipples = 15;
         this.rippleInterval = 2000;
         this.mouseRadius = 150;
         this.mouseForce = 5;
         
-        this.rippleGap = 25;  // Slightly reduced gap between concentric circles
+        this.rippleGap = 25;
         this.concentricCount = 3;
         
         this.lastMouseX = 0;
@@ -314,16 +315,14 @@ class RippleEffect {
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
-            // Calculate mouse movement distance
             const dx = x - this.lastMouseX;
             const dy = y - this.lastMouseY;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
-            // Create ripples based on mouse movement speed
             if (distance > this.mouseMoveThreshold) {
-                const speed = Math.min(distance / 10, 5);  // Cap the speed
-                if (Math.random() < 0.6) {  // 60% chance to create ripples
-                    this.createRipple(x, y, 2 + speed);
+                const speed = Math.min(distance / 15, 3);  // Reduced speed calculation
+                if (Math.random() < 0.6) {
+                    this.createRipple(x, y, this.baseVelocity + speed);
                 }
                 this.lastMouseX = x;
                 this.lastMouseY = y;
@@ -335,13 +334,17 @@ class RippleEffect {
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
-            // Create multiple ripple sets on click
-            for (let i = 0; i < 3; i++) {  // Create 3 sets of ripples
+            // Create multiple ripple sets on click with slower velocities
+            for (let i = 0; i < 3; i++) {
                 setTimeout(() => {
-                    const offsetX = x + (Math.random() - 0.5) * 30;  // Random offset
+                    const offsetX = x + (Math.random() - 0.5) * 30;
                     const offsetY = y + (Math.random() - 0.5) * 30;
-                    this.createRipple(offsetX, offsetY, 6 - i);  // Decreasing velocity
-                }, i * 100);  // Stagger the creation
+                    this.createRipple(
+                        offsetX, 
+                        offsetY, 
+                        this.baseVelocity + (1 - i * 0.2)  // Gentler velocity decrease
+                    );
+                }, i * 150);  // Increased delay between ripples
             }
         });
         
@@ -361,7 +364,6 @@ class RippleEffect {
             }
         }
         
-        // Create concentric circles with slightly randomized gaps
         for (let i = 0; i < this.concentricCount; i++) {
             const randomGap = this.rippleGap * (0.9 + Math.random() * 0.2);
             this.ripples.push({
@@ -369,8 +371,8 @@ class RippleEffect {
                 y,
                 radius: i * randomGap,
                 maxRadius: this.canvas.width * 0.4,
-                velocity: velocity * (1 - i * 0.1),  // Slightly slower outer circles
-                opacity: 0.8 - (i * 0.15),
+                velocity: velocity * (1 - i * 0.15),  // Gentler slowdown for outer circles
+                opacity: 0.8 - (i * 0.12),  // Slightly higher opacity for outer circles
                 color: this.getRippleColor()
             });
         }
@@ -380,7 +382,7 @@ class RippleEffect {
         setInterval(() => {
             const x = Math.random() * this.canvas.width;
             const y = Math.random() * this.canvas.height;
-            this.createRipple(x, y, 2);
+            this.createRipple(x, y, this.baseVelocity);  // Use base velocity
         }, this.rippleInterval);
     }
     

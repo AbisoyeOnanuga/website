@@ -286,25 +286,24 @@ class RippleEffect {
         this.canvas = document.getElementById('rippleCanvas');
         this.ctx = this.canvas.getContext('2d');
         
-        // Set canvas size
         this.canvas.width = this.canvas.offsetWidth;
         this.canvas.height = 270;
         
         this.ripples = [];
-        this.baseVelocity = 2;  // Base velocity for all ripples
-        this.maxRipples = 20;  // Increased to allow more ripples
+        this.baseVelocity = 1.5;  // Reduced base velocity
+        this.maxRipples = 20;
         this.rippleInterval = 2000;
         this.mouseRadius = 150;
         this.mouseForce = 5;
         
-        this.rippleGap = 25;
+        this.rippleGap = 20;  // Slightly tighter gaps
         this.concentricCount = 3;
         
         this.lastMouseX = 0;
         this.lastMouseY = 0;
-        this.mouseMoveThreshold = 3;  // Reduced threshold for more frequent ripples
-        this.lastClickTime = 0;  // Track last click time
-        this.clickCooldown = 100;  // Minimum time between clicks in ms
+        this.mouseMoveThreshold = 4;
+        this.lastClickTime = 0;
+        this.clickCooldown = 100;
         
         this.bindEvents();
         this.animate();
@@ -322,9 +321,9 @@ class RippleEffect {
             const distance = Math.sqrt(dx * dx + dy * dy);
             
             if (distance > this.mouseMoveThreshold) {
-                const speed = Math.min(distance / 12, 3);  // Adjusted speed calculation
-                if (Math.random() < 0.8) {  // Increased chance to create ripples (80%)
-                    this.createRipple(x, y, this.baseVelocity + speed);
+                const speed = Math.min(distance / 20, 2);  // Reduced speed scaling
+                if (Math.random() < 0.7) {  // Slightly reduced chance
+                    this.createRipple(x, y, this.baseVelocity + speed * 0.5);  // Gentler speed increase
                 }
                 this.lastMouseX = x;
                 this.lastMouseY = y;
@@ -333,17 +332,13 @@ class RippleEffect {
         
         this.canvas.addEventListener('click', (e) => {
             const currentTime = Date.now();
-            if (currentTime - this.lastClickTime < this.clickCooldown) {
-                return;  // Prevent double clicks
-            }
+            if (currentTime - this.lastClickTime < this.clickCooldown) return;
             
             const rect = this.canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
-            // Create single set of ripples on click
-            this.createRipple(x, y, this.baseVelocity * 2);  // Faster velocity for clicks
-            
+            this.createRipple(x, y, this.baseVelocity * 1.5);  // Gentler click ripples
             this.lastClickTime = currentTime;
         });
         
@@ -352,57 +347,39 @@ class RippleEffect {
         });
     }
     
-    createRipple(x, y, velocity = 2) {
+    createRipple(x, y, velocity = 1.5) {
         if (this.ripples.length >= this.maxRipples) {
-            // Remove oldest ripple group
             this.ripples.splice(0, this.concentricCount);
         }
         
         for (let i = 0; i < this.concentricCount; i++) {
-            const randomGap = this.rippleGap * (0.9 + Math.random() * 0.2);
+            const randomGap = this.rippleGap * (0.95 + Math.random() * 0.1);  // Less random variation
             this.ripples.push({
                 x,
                 y,
                 radius: i * randomGap,
-                maxRadius: this.canvas.width * 0.4,
-                velocity: velocity * (1 - i * 0.15),
-                opacity: 0.8 - (i * 0.12),
+                maxRadius: this.canvas.width * 0.35,  // Slightly smaller max radius
+                velocity: velocity * (1 - i * 0.2),  // More pronounced slowdown for outer circles
+                opacity: 0.9 - (i * 0.15),  // Higher initial opacity
                 color: this.getRippleColor()
             });
         }
     }
     
-    createAutoRipple() {
-        setInterval(() => {
-            const x = Math.random() * this.canvas.width;
-            const y = Math.random() * this.canvas.height;
-            this.createRipple(x, y, this.baseVelocity);  // Use base velocity
-        }, this.rippleInterval);
-    }
-    
-    getRippleColor() {
-        const theme = document.documentElement.getAttribute('data-theme');
-        return theme === 'dark' ? '255, 255, 255' : '0, 0, 0';
-    }
-    
     animate = () => {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Group ripples by their origin point
         const rippleGroups = {};
         this.ripples.forEach((ripple, index) => {
             const key = `${ripple.x},${ripple.y}`;
-            if (!rippleGroups[key]) {
-                rippleGroups[key] = [];
-            }
+            if (!rippleGroups[key]) rippleGroups[key] = [];
             rippleGroups[key].push(ripple);
         });
         
-        // Update and draw ripples in groups
         Object.values(rippleGroups).forEach(group => {
             group.forEach((ripple, index) => {
                 ripple.radius += ripple.velocity;
-                ripple.opacity -= 0.0005;  // Slower fade out
+                ripple.opacity -= 0.0008;  // Slower fade out
                 
                 if (ripple.opacity <= 0 || ripple.radius > ripple.maxRadius) {
                     this.ripples = this.ripples.filter(r => r !== ripple);
@@ -411,7 +388,7 @@ class RippleEffect {
                 
                 this.ctx.beginPath();
                 this.ctx.strokeStyle = `rgba(${ripple.color}, ${ripple.opacity})`;
-                this.ctx.lineWidth = 2;
+                this.ctx.lineWidth = 1.5;  // Thinner lines for more delicate look
                 this.ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
                 this.ctx.stroke();
             });

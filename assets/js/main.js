@@ -290,18 +290,16 @@ class RippleEffect {
         this.canvas.height = 270;
         
         this.ripples = [];
-        this.baseVelocity = 1.5;  // Reduced base velocity
-        this.maxRipples = 20;
+        this.baseVelocity = 1.5;
+        this.maxRipples = 25;
         this.rippleInterval = 2000;
-        this.mouseRadius = 150;
-        this.mouseForce = 5;
-        
-        this.rippleGap = 20;  // Slightly tighter gaps
+        this.rippleGap = 20;
         this.concentricCount = 3;
-        
         this.lastMouseX = 0;
         this.lastMouseY = 0;
-        this.mouseMoveThreshold = 4;
+        this.mouseMoveThreshold = 8;
+        this.lastRippleTime = 0;
+        this.rippleCreationInterval = 50;
         this.lastClickTime = 0;
         this.clickCooldown = 100;
         
@@ -311,23 +309,46 @@ class RippleEffect {
     }
     
     bindEvents() {
+        let lastRippleX = 0;
+        let lastRippleY = 0;
+        
         this.canvas.addEventListener('mousemove', (e) => {
             const rect = this.canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            const currentX = e.clientX - rect.left;
+            const currentY = e.clientY - rect.top;
             
-            const dx = x - this.lastMouseX;
-            const dy = y - this.lastMouseY;
+            const dx = currentX - this.lastMouseX;
+            const dy = currentY - this.lastMouseY;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
-            if (distance > this.mouseMoveThreshold) {
-                const speed = Math.min(distance / 20, 2);  // Reduced speed scaling
-                if (Math.random() < 0.7) {  // Slightly reduced chance
-                    this.createRipple(x, y, this.baseVelocity + speed * 0.5);  // Gentler speed increase
+            const currentTime = Date.now();
+            
+            // Create ripples along the mouse path
+            if (distance > this.mouseMoveThreshold && 
+                currentTime - this.lastRippleTime > this.rippleCreationInterval) {
+                
+                // Calculate position between last and current position
+                const rippleX = this.lastMouseX + (dx * 0.5);
+                const rippleY = this.lastMouseY + (dy * 0.5);
+                
+                // Calculate distance from last ripple
+                const rippleDx = rippleX - lastRippleX;
+                const rippleDy = rippleY - lastRippleY;
+                const rippleDistance = Math.sqrt(rippleDx * rippleDx + rippleDy * rippleDy);
+                
+                // Only create new ripple if far enough from last ripple
+                if (rippleDistance > this.mouseMoveThreshold * 2) {
+                    const speed = Math.min(distance / 30, 1.5);  // Reduced speed scaling
+                    this.createRipple(rippleX, rippleY, this.baseVelocity + speed * 0.3);
+                    
+                    lastRippleX = rippleX;
+                    lastRippleY = rippleY;
+                    this.lastRippleTime = currentTime;
                 }
-                this.lastMouseX = x;
-                this.lastMouseY = y;
             }
+            
+            this.lastMouseX = currentX;
+            this.lastMouseY = currentY;
         });
         
         this.canvas.addEventListener('click', (e) => {
@@ -353,17 +374,22 @@ class RippleEffect {
         }
         
         for (let i = 0; i < this.concentricCount; i++) {
-            const randomGap = this.rippleGap * (0.95 + Math.random() * 0.1);  // Less random variation
+            const randomGap = this.rippleGap * (0.95 + Math.random() * 0.1);
             this.ripples.push({
                 x,
                 y,
                 radius: i * randomGap,
-                maxRadius: this.canvas.width * 0.35,  // Slightly smaller max radius
-                velocity: velocity * (1 - i * 0.2),  // More pronounced slowdown for outer circles
-                opacity: 0.9 - (i * 0.15),  // Higher initial opacity
+                maxRadius: this.canvas.width * 0.25,
+                velocity: velocity * (1 - i * 0.2),
+                opacity: 0.85 - (i * 0.15),
                 color: this.getRippleColor()
             });
         }
+    }
+    
+    getRippleColor() {
+        const theme = document.documentElement.getAttribute('data-theme');
+        return theme === 'dark' ? '255, 255, 255' : '0, 0, 0';
     }
     
     animate = () => {

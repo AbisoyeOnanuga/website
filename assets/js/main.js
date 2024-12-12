@@ -146,12 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     
-    // Initialize water ripple
-    const waveCanvas = document.getElementById('waveCanvas');
-    if (waveCanvas) {
-        const ripple = new WaterRipple();
-    }
-    
     // Initialize particle portrait
     const initParticlePortrait = () => {
         const particleCanvas = document.getElementById('particleCanvas');
@@ -164,109 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 themeToggle.addEventListener('click', toggleTheme);
-
-// Wave Animation
-class WaterRipple {
-    constructor() {
-        this.canvas = document.getElementById('waveCanvas');
-        this.ctx = this.canvas.getContext('2d');
-        
-        // Set canvas size
-        const rect = this.canvas.parentElement.getBoundingClientRect();
-        this.canvas.width = rect.width;
-        this.canvas.height = rect.height;
-        
-        this.width = this.canvas.width;
-        this.height = this.canvas.height;
-        this.lastMouse = { x: 0, y: 0 };
-        this.ripples = [];
-        this.maxRipples = 3;
-        this.rippleInterval = 4000;
-        this.rippleSpeed = 1;
-        
-        // Start animation
-        this.setupEventListeners();
-        this.startAutoRipples();
-        this.animate();
-        
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            const rect = this.canvas.parentElement.getBoundingClientRect();
-            this.canvas.width = rect.width;
-            this.canvas.height = rect.height;
-            this.width = this.canvas.width;
-            this.height = this.canvas.height;
-        });
-    }
-
-    setupEventListeners() {
-        this.canvas.addEventListener('mousemove', (e) => {
-            const rect = this.canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const dx = x - this.lastMouse.x;
-            const dy = y - this.lastMouse.y;
-            const speed = Math.sqrt(dx * dx + dy * dy);
-            
-            if (speed > 3) {
-                this.addRipple(x, y, Math.min(speed * 2, 20));
-                this.lastMouse = { x, y };
-            }
-        });
-    }
-
-    addRipple(x, y, size = 15) {
-        if (this.ripples.length < this.maxRipples) {
-            this.ripples.push({
-                x,
-                y,
-                size,
-                opacity: 0.5,
-                radius: 0,
-                maxRadius: size * 40,
-                speed: this.rippleSpeed
-            });
-        }
-    }
-
-    startAutoRipples() {
-        setInterval(() => {
-            const x = Math.random() * this.width;
-            const y = Math.random() * this.height;
-            this.addRipple(x, y);
-        }, this.rippleInterval);
-    }
-
-    animate = () => {
-        this.ctx.clearRect(0, 0, this.width, this.height);
-        
-        for (let i = this.ripples.length - 1; i >= 0; i--) {
-            const ripple = this.ripples[i];
-            
-            ripple.radius += ripple.speed;
-            ripple.opacity -= 0.001;
-            
-            if (ripple.opacity <= 0 || ripple.radius >= ripple.maxRadius) {
-                this.ripples.splice(i, 1);
-                continue;
-            }
-            
-            this.ctx.beginPath();
-            this.ctx.strokeStyle = `rgba(${this.getRippleColor()}, ${ripple.opacity})`;
-            this.ctx.lineWidth = 2;
-            this.ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
-            this.ctx.stroke();
-        }
-        
-        requestAnimationFrame(this.animate);
-    }
-
-    getRippleColor() {
-        const theme = document.documentElement.getAttribute('data-theme');
-        return theme === 'dark' ? '255, 255, 255' : '0, 0, 0';
-    }
-}
 
 class ParticlePortrait {
     constructor() {
@@ -400,9 +291,11 @@ class RippleEffect {
         this.canvas.height = 270;
         
         this.ripples = [];
-        this.maxRipples = 3;
+        this.maxRipples = 5;  // Keep at 3 ripples
         this.lastRippleTime = 0;
-        this.rippleInterval = 3000; // Time between auto ripples
+        this.rippleInterval = 2000;  // Faster auto ripples (2 seconds)
+        this.mouseRadius = 150;  // Larger area of mouse influence
+        this.mouseForce = 5;  // Stronger mouse force
         
         this.bindEvents();
         this.animate();
@@ -414,7 +307,25 @@ class RippleEffect {
             const rect = this.canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            this.createRipple(x, y, 2);
+            
+            // Create larger ripples on mouse move
+            if (Math.random() < 1) {  // 40% chance to create ripple on movement
+                this.createRipple(x, y, 4 + Math.random() * 2);  // Larger, faster ripples
+            }
+        });
+        
+        // Add click handler for big ripples
+        this.canvas.addEventListener('click', (e) => {
+            const rect = this.canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Create multiple ripples on click
+            for (let i = 0; i < 2; i++) {
+                setTimeout(() => {
+                    this.createRipple(x, y, 6 - i);  // Decreasing size for each subsequent ripple
+                }, i * 100);  // Stagger the ripples
+            }
         });
         
         window.addEventListener('resize', () => {
@@ -422,16 +333,16 @@ class RippleEffect {
         });
     }
     
-    createRipple(x, y, velocity = 1) {
+    createRipple(x, y, velocity = 2) {
         if (this.ripples.length >= this.maxRipples) return;
         
         this.ripples.push({
             x,
             y,
             radius: 0,
-            maxRadius: this.canvas.width * 0.3,
+            maxRadius: this.canvas.width * 0.5,  // Larger maximum radius
             velocity,
-            opacity: 0.5,
+            opacity: 0.8,  // Higher starting opacity
             color: this.getRippleColor()
         });
     }
@@ -440,7 +351,7 @@ class RippleEffect {
         setInterval(() => {
             const x = Math.random() * this.canvas.width;
             const y = Math.random() * this.canvas.height;
-            this.createRipple(x, y, 1);
+            this.createRipple(x, y, 2);  // Faster auto ripples
         }, this.rippleInterval);
     }
     
@@ -454,7 +365,7 @@ class RippleEffect {
         
         this.ripples.forEach((ripple, index) => {
             ripple.radius += ripple.velocity;
-            ripple.opacity -= 0.001;
+            ripple.opacity -= 0.0005;  // Much slower fade out
             
             if (ripple.opacity <= 0 || ripple.radius > ripple.maxRadius) {
                 this.ripples.splice(index, 1);
@@ -463,7 +374,7 @@ class RippleEffect {
             
             this.ctx.beginPath();
             this.ctx.strokeStyle = `rgba(${ripple.color}, ${ripple.opacity})`;
-            this.ctx.lineWidth = 2;
+            this.ctx.lineWidth = 2.5;  // Slightly thicker lines
             this.ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
             this.ctx.stroke();
         });

@@ -291,11 +291,17 @@ class RippleEffect {
         this.canvas.height = 270;
         
         this.ripples = [];
-        this.maxRipples = 5;  // Keep at 3 ripples
-        this.lastRippleTime = 0;
-        this.rippleInterval = 2000;  // Faster auto ripples (2 seconds)
-        this.mouseRadius = 150;  // Larger area of mouse influence
-        this.mouseForce = 5;  // Stronger mouse force
+        this.maxRipples = 15;  // Increased from 5 to 15 to allow more ripples
+        this.rippleInterval = 2000;
+        this.mouseRadius = 150;
+        this.mouseForce = 5;
+        
+        this.rippleGap = 25;  // Slightly reduced gap between concentric circles
+        this.concentricCount = 3;
+        
+        this.lastMouseX = 0;
+        this.lastMouseY = 0;
+        this.mouseMoveThreshold = 5;  // Minimum distance for new ripples
         
         this.bindEvents();
         this.animate();
@@ -308,23 +314,34 @@ class RippleEffect {
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
-            // Create larger ripples on mouse move
-            if (Math.random() < 1) {  // 40% chance to create ripple on movement
-                this.createRipple(x, y, 4 + Math.random() * 2);  // Larger, faster ripples
+            // Calculate mouse movement distance
+            const dx = x - this.lastMouseX;
+            const dy = y - this.lastMouseY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // Create ripples based on mouse movement speed
+            if (distance > this.mouseMoveThreshold) {
+                const speed = Math.min(distance / 10, 5);  // Cap the speed
+                if (Math.random() < 0.6) {  // 60% chance to create ripples
+                    this.createRipple(x, y, 2 + speed);
+                }
+                this.lastMouseX = x;
+                this.lastMouseY = y;
             }
         });
         
-        // Add click handler for big ripples
         this.canvas.addEventListener('click', (e) => {
             const rect = this.canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
-            // Create multiple ripples on click
-            for (let i = 0; i < 2; i++) {
+            // Create multiple ripple sets on click
+            for (let i = 0; i < 3; i++) {  // Create 3 sets of ripples
                 setTimeout(() => {
-                    this.createRipple(x, y, 6 - i);  // Decreasing size for each subsequent ripple
-                }, i * 100);  // Stagger the ripples
+                    const offsetX = x + (Math.random() - 0.5) * 30;  // Random offset
+                    const offsetY = y + (Math.random() - 0.5) * 30;
+                    this.createRipple(offsetX, offsetY, 6 - i);  // Decreasing velocity
+                }, i * 100);  // Stagger the creation
             }
         });
         
@@ -334,24 +351,36 @@ class RippleEffect {
     }
     
     createRipple(x, y, velocity = 2) {
-        if (this.ripples.length >= this.maxRipples) return;
+        if (this.ripples.length >= this.maxRipples) {
+            // Remove oldest ripple group if at max
+            const oldestKey = Object.keys(this.rippleGroups)[0];
+            if (oldestKey) {
+                this.ripples = this.ripples.filter(r => 
+                    `${r.x},${r.y}` !== oldestKey
+                );
+            }
+        }
         
-        this.ripples.push({
-            x,
-            y,
-            radius: 0,
-            maxRadius: this.canvas.width * 0.5,  // Larger maximum radius
-            velocity,
-            opacity: 0.8,  // Higher starting opacity
-            color: this.getRippleColor()
-        });
+        // Create concentric circles with slightly randomized gaps
+        for (let i = 0; i < this.concentricCount; i++) {
+            const randomGap = this.rippleGap * (0.9 + Math.random() * 0.2);
+            this.ripples.push({
+                x,
+                y,
+                radius: i * randomGap,
+                maxRadius: this.canvas.width * 0.4,
+                velocity: velocity * (1 - i * 0.1),  // Slightly slower outer circles
+                opacity: 0.8 - (i * 0.15),
+                color: this.getRippleColor()
+            });
+        }
     }
     
     createAutoRipple() {
         setInterval(() => {
             const x = Math.random() * this.canvas.width;
             const y = Math.random() * this.canvas.height;
-            this.createRipple(x, y, 2);  // Faster auto ripples
+            this.createRipple(x, y, 2);
         }, this.rippleInterval);
     }
     
@@ -363,20 +392,33 @@ class RippleEffect {
     animate = () => {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
+        // Group ripples by their origin point
+        const rippleGroups = {};
         this.ripples.forEach((ripple, index) => {
-            ripple.radius += ripple.velocity;
-            ripple.opacity -= 0.0005;  // Much slower fade out
-            
-            if (ripple.opacity <= 0 || ripple.radius > ripple.maxRadius) {
-                this.ripples.splice(index, 1);
-                return;
+            const key = `${ripple.x},${ripple.y}`;
+            if (!rippleGroups[key]) {
+                rippleGroups[key] = [];
             }
-            
-            this.ctx.beginPath();
-            this.ctx.strokeStyle = `rgba(${ripple.color}, ${ripple.opacity})`;
-            this.ctx.lineWidth = 2.5;  // Slightly thicker lines
-            this.ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
-            this.ctx.stroke();
+            rippleGroups[key].push(ripple);
+        });
+        
+        // Update and draw ripples in groups
+        Object.values(rippleGroups).forEach(group => {
+            group.forEach((ripple, index) => {
+                ripple.radius += ripple.velocity;
+                ripple.opacity -= 0.0005;  // Slower fade out
+                
+                if (ripple.opacity <= 0 || ripple.radius > ripple.maxRadius) {
+                    this.ripples = this.ripples.filter(r => r !== ripple);
+                    return;
+                }
+                
+                this.ctx.beginPath();
+                this.ctx.strokeStyle = `rgba(${ripple.color}, ${ripple.opacity})`;
+                this.ctx.lineWidth = 2;
+                this.ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
+                this.ctx.stroke();
+            });
         });
         
         requestAnimationFrame(this.animate);

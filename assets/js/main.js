@@ -156,14 +156,17 @@ class WaterRipple {
         this.width = this.canvas.width;
         this.height = this.canvas.height;
         this.lastMouse = { x: 0, y: 0 };
-        this.mouseForce = 0;
+        this.mouseForce = 1;
         this.ripples = [];
         this.autoRippleTimer = null;
-        this.maxRipples = 5;  // Limit maximum ripples
-        this.rippleInterval = 5000;  // Slower interval (5 seconds)
-        this.rippleSpeed = 2;  // Slower ripple speed
-        this.rippleSpacing = 300;  // Minimum spacing between ripples
-        this.mouseForceMultiplier = 0.3;  // Increased mouse force
+        this.maxRipples = 5;
+        this.rippleInterval = 5000;
+        this.rippleSpeed = 1.5;
+        this.rippleSpacing = 400;
+        this.mouseForceMultiplier = 1.5;
+        this.rippleDecay = 0.003;
+        this.rippleLineWidth = 1;
+        this.padding = 50;
         
         this.init();
     }
@@ -176,8 +179,11 @@ class WaterRipple {
     }
 
     resize() {
-        this.width = this.canvas.width = this.canvas.offsetWidth;
-        this.height = this.canvas.height = this.canvas.offsetHeight;
+        const rect = this.canvas.getBoundingClientRect();
+        this.width = this.canvas.width = rect.width;
+        this.height = this.canvas.height = rect.height;
+        this.boundaryX = [-this.padding, this.width + this.padding];
+        this.boundaryY = [-this.padding, this.height + this.padding];
     }
 
     setupEventListeners() {
@@ -229,7 +235,10 @@ class WaterRipple {
     }
 
     addRipple(x, y, size) {
-        // Check spacing from existing ripples
+        // Ensure ripple is within boundaries
+        x = Math.max(this.padding, Math.min(x, this.width - this.padding));
+        y = Math.max(this.padding, Math.min(y, this.height - this.padding));
+
         const isTooClose = this.ripples.some(ripple => {
             const dx = x - ripple.x;
             const dy = y - ripple.y;
@@ -238,41 +247,64 @@ class WaterRipple {
         });
 
         if (!isTooClose && this.ripples.length < this.maxRipples) {
-            this.ripples.push({
-                x,
-                y,
-                size,
-                opacity: 1,
-                maxRadius: size * 20,  // Increased max radius
-                radius: 0,
-                speed: this.rippleSpeed
-            });
+            const baseSize = size * 0.8;
+            for (let i = 0; i < 3; i++) {
+                this.ripples.push({
+                    x,
+                    y,
+                    size: baseSize * (1 - i * 0.2),
+                    opacity: 1,
+                    maxRadius: baseSize * 25,
+                    radius: i * 8,
+                    speed: this.rippleSpeed * (1 - i * 0.15),
+                    timestamp: Date.now()
+                });
+            }
         }
     }
 
     animate() {
+        const now = Date.now();
         this.ctx.clearRect(0, 0, this.width, this.height);
         
-        // Draw water background
-        this.ctx.fillStyle = getComputedStyle(document.documentElement)
-            .getPropertyValue('--bg-color');
+        // Draw water background with gradient
+        const gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
+        gradient.addColorStop(0, this.getBackgroundColor(0.98));
+        gradient.addColorStop(1, this.getBackgroundColor(1));
+        this.ctx.fillStyle = gradient;
         this.ctx.fillRect(0, 0, this.width, this.height);
 
         // Update and draw ripples
         for (let i = this.ripples.length - 1; i >= 0; i--) {
             const ripple = this.ripples[i];
+            const age = (now - ripple.timestamp) / 1000;
             
             ripple.radius += ripple.speed;
-            ripple.opacity -= 0.005;  // Slower fade out
+            ripple.opacity -= this.rippleDecay;
             
-            if (ripple.opacity <= 0 || ripple.radius >= ripple.maxRadius) {
+            // Remove ripples that are too old or too big
+            if (ripple.opacity <= 0 || 
+                ripple.radius >= ripple.maxRadius || 
+                age > 5) {
                 this.ripples.splice(i, 1);
                 continue;
             }
 
+            // Draw ripple with improved gradient
+            const gradient = this.ctx.createRadialGradient(
+                ripple.x, ripple.y, ripple.radius - this.rippleLineWidth,
+                ripple.x, ripple.y, ripple.radius + this.rippleLineWidth
+            );
+            
+            const color = this.getRippleColor();
+            const opacity = ripple.opacity * Math.min(1, (ripple.maxRadius - ripple.radius) / 100);
+            gradient.addColorStop(0, `rgba(${color}, 0)`);
+            gradient.addColorStop(0.5, `rgba(${color}, ${opacity})`);
+            gradient.addColorStop(1, `rgba(${color}, 0)`);
+
             this.ctx.beginPath();
-            this.ctx.strokeStyle = `rgba(${this.getRippleColor()}, ${ripple.opacity})`;
-            this.ctx.lineWidth = 2;
+            this.ctx.strokeStyle = gradient;
+            this.ctx.lineWidth = this.rippleLineWidth;
             this.ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
             this.ctx.stroke();
         }
@@ -280,9 +312,15 @@ class WaterRipple {
         requestAnimationFrame(() => this.animate());
     }
 
+    getBackgroundColor(alpha = 1) {
+        const theme = document.documentElement.getAttribute('data-theme');
+        const color = theme === 'dark' ? '10, 10, 10' : '250, 250, 250';
+        return `rgba(${color}, ${alpha})`;
+    }
+
     getRippleColor() {
         const theme = document.documentElement.getAttribute('data-theme');
-        return theme === 'dark' ? '255, 255, 255' : '26, 26, 26';
+        return theme === 'dark' ? '255, 255, 255' : '40, 40, 40';
     }
 }
 

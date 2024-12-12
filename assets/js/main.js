@@ -169,13 +169,13 @@ class ParticlePortrait {
         this.image = new Image();
         this.image.src = 'assets/img/crypto_me.png';
         
-        this.particleSize = 3;
-        this.particleSpacing = 4;
+        this.particleSize = 4;
+        this.particleSpacing = 6;
         this.particleCount = 0;
         this.maxSpeed = 4;
         this.returnSpeed = 0.1;
         this.mouseRadius = 100;
-        this.mouseForce = 0.2;
+        this.mouseForce = 0.3;
         
         this.setupCanvas();
         this.setupEventListeners();
@@ -292,7 +292,7 @@ class RippleEffect {
         
         this.ripples = [];
         this.baseVelocity = 2;  // Base velocity for all ripples
-        this.maxRipples = 15;
+        this.maxRipples = 20;  // Increased to allow more ripples
         this.rippleInterval = 2000;
         this.mouseRadius = 150;
         this.mouseForce = 5;
@@ -302,7 +302,9 @@ class RippleEffect {
         
         this.lastMouseX = 0;
         this.lastMouseY = 0;
-        this.mouseMoveThreshold = 5;  // Minimum distance for new ripples
+        this.mouseMoveThreshold = 3;  // Reduced threshold for more frequent ripples
+        this.lastClickTime = 0;  // Track last click time
+        this.clickCooldown = 100;  // Minimum time between clicks in ms
         
         this.bindEvents();
         this.animate();
@@ -320,8 +322,8 @@ class RippleEffect {
             const distance = Math.sqrt(dx * dx + dy * dy);
             
             if (distance > this.mouseMoveThreshold) {
-                const speed = Math.min(distance / 15, 3);  // Reduced speed calculation
-                if (Math.random() < 0.6) {
+                const speed = Math.min(distance / 12, 3);  // Adjusted speed calculation
+                if (Math.random() < 0.8) {  // Increased chance to create ripples (80%)
                     this.createRipple(x, y, this.baseVelocity + speed);
                 }
                 this.lastMouseX = x;
@@ -330,22 +332,19 @@ class RippleEffect {
         });
         
         this.canvas.addEventListener('click', (e) => {
+            const currentTime = Date.now();
+            if (currentTime - this.lastClickTime < this.clickCooldown) {
+                return;  // Prevent double clicks
+            }
+            
             const rect = this.canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
-            // Create multiple ripple sets on click with slower velocities
-            for (let i = 0; i < 3; i++) {
-                setTimeout(() => {
-                    const offsetX = x + (Math.random() - 0.5) * 30;
-                    const offsetY = y + (Math.random() - 0.5) * 30;
-                    this.createRipple(
-                        offsetX, 
-                        offsetY, 
-                        this.baseVelocity + (1 - i * 0.2)  // Gentler velocity decrease
-                    );
-                }, i * 150);  // Increased delay between ripples
-            }
+            // Create single set of ripples on click
+            this.createRipple(x, y, this.baseVelocity * 2);  // Faster velocity for clicks
+            
+            this.lastClickTime = currentTime;
         });
         
         window.addEventListener('resize', () => {
@@ -355,13 +354,8 @@ class RippleEffect {
     
     createRipple(x, y, velocity = 2) {
         if (this.ripples.length >= this.maxRipples) {
-            // Remove oldest ripple group if at max
-            const oldestKey = Object.keys(this.rippleGroups)[0];
-            if (oldestKey) {
-                this.ripples = this.ripples.filter(r => 
-                    `${r.x},${r.y}` !== oldestKey
-                );
-            }
+            // Remove oldest ripple group
+            this.ripples.splice(0, this.concentricCount);
         }
         
         for (let i = 0; i < this.concentricCount; i++) {
@@ -371,8 +365,8 @@ class RippleEffect {
                 y,
                 radius: i * randomGap,
                 maxRadius: this.canvas.width * 0.4,
-                velocity: velocity * (1 - i * 0.15),  // Gentler slowdown for outer circles
-                opacity: 0.8 - (i * 0.12),  // Slightly higher opacity for outer circles
+                velocity: velocity * (1 - i * 0.15),
+                opacity: 0.8 - (i * 0.12),
                 color: this.getRippleColor()
             });
         }

@@ -14,6 +14,7 @@
   --second-color: hsl(var(--hue-color), 50%, 10%);
   /*===== Fonts =====*/
   --body-font: "League Spartan", sans-serif;
+  --large-font-size: 8rem;
   --big-font-size: 2rem;
   --h2-font-size: 1.25rem;
   --normal-font-size: 1.5rem;
@@ -66,7 +67,7 @@ html {
 body {
   margin: 0;
   padding: 1rem;
-  border: 1px solid #0a0a0a;
+  border: 15px solid #0a0a0a;
   min-height: 100vh;
   font-optical-sizing: auto;
   font-family: var(--body-font);
@@ -1113,4 +1114,108 @@ header a {
 
 .portrait-container:hover .blob-motion {
     filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.15));
+}
+
+.title-container {
+    width: 100%;
+    margin: 2rem -1rem;
+    padding: 3rem 2rem;
+    background: var(--bg-color);
+    border-top: var(--box-border);
+    border-bottom: var(--box-border);
+}
+
+.main-title {
+    font-size: calc(var(--big-font-size) * 1.2);
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.title-highlight {
+    color: var(--first-color);
+}
+
+.typing-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    font-size: var(--large-font-size);
+    color: var(--text-color);
+}
+
+.typing-prefix {
+    white-space: nowrap;
+}
+
+.typing-container {
+    color: var(--first-color);
+    border-right: 3px solid;
+    padding-right: 4px;
+    animation: blink 0.75s step-end infinite;
+}
+
+@media screen and (max-width: 768px) {
+    .title-container {
+        margin: 1rem -0.5rem;
+        padding: 2rem 1rem;
+    }
+    
+    .main-title {
+        font-size: var(--big-font-size);
+    }
+}
+
+.home__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.home__data {
+    flex: 1;
+}
+
+.home__img {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.typing-container-wrapper {
+    width: 100vw;  /* Full viewport width */
+    margin-right: calc(-50vw + 50%);
+    padding: 1rem;  /* Match main content max-width */
+    background: var(--bg-color);
+    border-top: var(--box-border);
+    border-bottom: var(--box-border);
+    position: relative;
+    left: 50%;
+    right: 50%;
+    transform: translateX(-50%);
+    z-index: -1;
+}
+
+.typing-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;  /* Center the typing text */
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.typing-container {
+    color: var(--first-color);
+    border-right: 3px solid;
+    padding-right: 4px;
+    animation: blink 0.75s step-end infinite;
+    min-height: 1.2em;  /* Prevent layout shift */
+}
+
+@media screen and (max-width: 1400px) {
+    .typing-container-wrapper {
+        padding: 1rem;
+    }
 }

@@ -1078,6 +1078,7 @@ header a {
     margin: 0 auto;
     position: relative;
     cursor: pointer;
+    z-index: 1;  /* Ensure it's above other elements */
 }
 
 #particleCanvas {
@@ -1085,6 +1086,7 @@ header a {
     height: 100%;
     display: block;
     filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.1));
+    background: transparent;  /* Ensure transparent background */
 }
 
 [data-theme="dark"] .portrait-container {
@@ -1208,5 +1210,31 @@ header a {
 @media screen and (max-width: 1400px) {
     .typing-container-wrapper {
         padding: 1rem;
+    }
+}
+
+.ripple-container {
+    position: relative;
+    width: 100vw;
+    height: 270px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--bg-color);
+    border-top: var(--box-border);
+    border-bottom: var(--box-border);
+    overflow: hidden;
+}
+
+#rippleCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .ripple-container {
+        height: 200px;
     }
 }

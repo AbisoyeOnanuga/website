@@ -83,11 +83,10 @@
                         </button>
                     </div>
                 </div>
-
-                <div class="header__wave">
-                    <canvas id="waveCanvas"></canvas>
-                </div>
             </header>
+            <div class="header__wave">
+                <canvas id="waveCanvas"></canvas>
+            </div>
     
             <main class="l-main">
                 <!--===== HOME =====-->
@@ -100,26 +99,7 @@
 
                         <div class="home__img">
                             <div class="portrait-container">
-                                <svg class="blob-motion" viewBox="0 0 500 500">
-                                    <defs>
-                                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                            <stop offset="0%" class="gradient-start"/>
-                                            <stop offset="100%" class="gradient-end"/>
-                                        </linearGradient>
-                                        <clipPath id="blob-clip">
-                                            <path d="M 0 0" class="blob-path"/>
-                                        </clipPath>
-                                    </defs>
-                                    <g clip-path="url(#blob-clip)">
-                                        <image 
-                                            href="assets/img/crypto_me.png" 
-                                            width="500" 
-                                            height="500" 
-                                            preserveAspectRatio="xMidYMid slice"
-                                        />
-                                    </g>
-                                    <path d="M 0 0" class="blob-outline" fill="none"/>
-                                </svg>
+                                <canvas id="particleCanvas"></canvas>
                             </div>
                         </div>
                     </div>

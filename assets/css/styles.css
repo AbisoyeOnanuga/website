@@ -941,21 +941,23 @@ header a {
 /* Header wave animation */
 .header__wave {
     position: relative;
-    width: calc(100% + 2rem);
+    width: 100%;
     height: 270px;
-    margin: 2rem -1rem;
+    margin: 0;
+    padding: 0;
     border-top: var(--box-border);
     border-bottom: var(--box-border);
     background: var(--bg-color);
     overflow: hidden;
-    z-index: 1;
 }
 
 #waveCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     display: block;
-    opacity: 0.8;
 }
 
 /* Updated hover animations */
@@ -1076,29 +1078,13 @@ header a {
     margin: 0 auto;
     position: relative;
     cursor: pointer;
-    overflow: visible; /* Allow blob to overflow */
 }
 
-.blob-motion {
+#particleCanvas {
     width: 100%;
     height: 100%;
+    display: block;
     filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.1));
-}
-
-.blob-path {
-    fill: var(--bg-color);
-}
-
-.blob-outline {
-    stroke: var(--accent-color);
-    stroke-width: 1.5;
-    opacity: 0.8;
-    fill: none;
-}
-
-.blob-motion image {
-    transform: scale(0.9);  /* Adjusted scale */
-    transform-origin: center;
 }
 
 [data-theme="dark"] .portrait-container {
@@ -1174,6 +1160,8 @@ header a {
     justify-content: space-between;
     gap: 2rem;
     margin-bottom: 3rem;
+    margin-top: 4rem;
+    padding-top: 2rem;
 }
 
 .home__data {

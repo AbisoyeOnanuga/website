@@ -150,12 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (canvas) {
         new WaterRipple();
     }
-    
-    // Initialize blob animation
-    const blobPaths = document.querySelectorAll('.blob-path, .blob-outline');
-    if (blobPaths.length) {
-        new BlobAnimation();
-    }
 });
 
 themeToggle.addEventListener('click', toggleTheme);
@@ -165,291 +159,243 @@ class WaterRipple {
     constructor() {
         this.canvas = document.getElementById('waveCanvas');
         this.ctx = this.canvas.getContext('2d');
-        this.width = this.canvas.width;
-        this.height = this.canvas.height;
+        
+        // Force initial size with requestAnimationFrame to ensure DOM is ready
+        requestAnimationFrame(() => {
+            this.canvas.style.width = '100%';
+            this.canvas.style.height = '100%';
+            this.canvas.width = this.canvas.offsetWidth || this.canvas.parentElement.offsetWidth;
+            this.canvas.height = this.canvas.offsetHeight || 270; // Default height if not set
+            
+            this.width = this.canvas.width;
+            this.height = this.canvas.height;
+        });
+        
         this.lastMouse = { x: 0, y: 0 };
         this.mouseForce = 1;
         this.ripples = [];
         this.autoRippleTimer = null;
-        this.maxRipples = 8;  // Allow more ripples
-        this.rippleInterval = 4000;
-        this.rippleSpeed = 1.5;
-        this.rippleSpacing = 400;
+        this.maxRipples = 4;
+        this.rippleInterval = 3000;
+        this.rippleSpeed = 2.5;
         this.mouseForceMultiplier = 2;
-        this.rippleDecay = 0.003;
-        this.rippleLineWidth = 1;
-        this.padding = 50;
-        this.trailCount = 4;  // More trailing ripples
-        this.trailDelay = 2;  // Faster trail generation
+        this.rippleDecay = 0.0015;
+        this.rippleLineWidth = 2;
         
         this.init();
-    }
-
-    init() {
-        this.resize();
-        this.setupEventListeners();
-        this.startAutoRipples();
-        this.animate();
-    }
-
-    resize() {
-        const rect = this.canvas.getBoundingClientRect();
-        this.width = this.canvas.width = rect.width;
-        this.height = this.canvas.height = rect.height;
-        this.boundaryX = [-this.padding, this.width + this.padding];
-        this.boundaryY = [-this.padding, this.height + this.padding];
-    }
-
-    setupEventListeners() {
-        window.addEventListener('resize', () => this.resize());
         
-        let lastTrailTime = 0;
-        
-        this.canvas.addEventListener('mousemove', (e) => {
-            const rect = this.canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const dx = x - this.lastMouse.x;
-            const dy = y - this.lastMouse.y;
-            const speed = Math.sqrt(dx * dx + dy * dy);
-            
-            const now = Date.now();
-            if (speed > 1) {
-                const force = Math.min(speed * this.mouseForceMultiplier, 35);
-                this.addRipple(x, y, force);
-                
-                // Add more trailing ripples
-                if (speed > 3 && now - lastTrailTime > this.trailDelay) {
-                    for (let i = 1; i <= this.trailCount; i++) {
-                        const trailX = this.lastMouse.x + (dx * (i / (this.trailCount + 1)));
-                        const trailY = this.lastMouse.y + (dy * (i / (this.trailCount + 1)));
-                        this.addRipple(trailX, trailY, force * (1 - i / (this.trailCount + 1)));
-                    }
-                    lastTrailTime = now;
-                }
-            }
-            
-            this.lastMouse = { x, y };
+        // Handle window resize with debouncing
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                this.canvas.width = this.canvas.offsetWidth;
+                this.canvas.height = this.canvas.offsetHeight || 270;
+                this.width = this.canvas.width;
+                this.height = this.canvas.height;
+            }, 250);
         });
-
-        this.canvas.addEventListener('click', (e) => {
-            const rect = this.canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            this.addRipple(x, y, 25);
-        });
-    }
-
-    startAutoRipples() {
-        this.autoRippleTimer = setInterval(() => {
-            if (this.ripples.length < this.maxRipples) {
-                const x = Math.random() * this.width;
-                const y = Math.random() * this.height;
-                const size = 8 + Math.random() * 12;  // Larger random ripples
-                this.addRipple(x, y, size);
-            }
-        }, this.rippleInterval);
-    }
-
-    addRipple(x, y, size) {
-        // Ensure ripple is within boundaries
-        x = Math.max(this.padding, Math.min(x, this.width - this.padding));
-        y = Math.max(this.padding, Math.min(y, this.height - this.padding));
-
-        const isTooClose = this.ripples.some(ripple => {
-            const dx = x - ripple.x;
-            const dy = y - ripple.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            return distance < this.rippleSpacing;
-        });
-
-        if (!isTooClose && this.ripples.length < this.maxRipples) {
-            const baseSize = size * 0.8;
-            for (let i = 0; i < 3; i++) {
-                this.ripples.push({
-                    x,
-                    y,
-                    size: baseSize * (1 - i * 0.2),
-                    opacity: 1,
-                    maxRadius: baseSize * 25,
-                    radius: i * 8,
-                    speed: this.rippleSpeed * (1 - i * 0.15),
-                    timestamp: Date.now()
-                });
-            }
-        }
-    }
-
-    animate() {
-        const now = Date.now();
-        this.ctx.clearRect(0, 0, this.width, this.height);
-        
-        // Draw water background with gradient
-        const gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
-        gradient.addColorStop(0, this.getBackgroundColor(0.98));
-        gradient.addColorStop(1, this.getBackgroundColor(1));
-        this.ctx.fillStyle = gradient;
-        this.ctx.fillRect(0, 0, this.width, this.height);
-
-        // Update and draw ripples
-        for (let i = this.ripples.length - 1; i >= 0; i--) {
-            const ripple = this.ripples[i];
-            const age = (now - ripple.timestamp) / 1000;
-            
-            ripple.radius += ripple.speed;
-            ripple.opacity -= this.rippleDecay;
-            
-            // Remove ripples that are too old or too big
-            if (ripple.opacity <= 0 || 
-                ripple.radius >= ripple.maxRadius || 
-                age > 5) {
-                this.ripples.splice(i, 1);
-                continue;
-            }
-
-            // Draw ripple with improved gradient
-            const gradient = this.ctx.createRadialGradient(
-                ripple.x, ripple.y, ripple.radius - this.rippleLineWidth,
-                ripple.x, ripple.y, ripple.radius + this.rippleLineWidth
-            );
-            
-            const color = this.getRippleColor();
-            const opacity = ripple.opacity * Math.min(1, (ripple.maxRadius - ripple.radius) / 100);
-            gradient.addColorStop(0, `rgba(${color}, 0)`);
-            gradient.addColorStop(0.5, `rgba(${color}, ${opacity})`);
-            gradient.addColorStop(1, `rgba(${color}, 0)`);
-
-            this.ctx.beginPath();
-            this.ctx.strokeStyle = gradient;
-            this.ctx.lineWidth = this.rippleLineWidth;
-            this.ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
-            this.ctx.stroke();
-        }
-
-        requestAnimationFrame(() => this.animate());
-    }
-
-    getBackgroundColor(alpha = 1) {
-        const theme = document.documentElement.getAttribute('data-theme');
-        const color = theme === 'dark' ? '10, 10, 10' : '250, 250, 250';
-        return `rgba(${color}, ${alpha})`;
     }
 
     getRippleColor() {
         const theme = document.documentElement.getAttribute('data-theme');
-        return theme === 'dark' ? '255, 255, 255' : '40, 40, 40';
-    }
-}
-
-// Add this new class for the blob animation
-class BlobAnimation {
-    constructor() {
-        this.paths = document.querySelectorAll('.blob-path, .blob-outline');
-        this.numPoints = 5;  // Reduced number of points
-        this.centerX = 250;
-        this.centerY = 250;
-        this.baseRadius = 200;  // Slightly larger
-        this.points = [];
-        this.time = 0;
-        this.mouse = { x: this.centerX, y: this.centerY };
-        this.mouseInfluence = 0.25;  // Increased mouse influence
-        this.morphSpeed = 0.003;  // Slightly faster morphing
-        this.noiseScale = 0.5;
-        
-        this.init();
-        this.setupEventListeners();
+        return theme === 'dark' ? '255, 255, 255' : '0, 0, 0';
     }
 
-    init() {
-        for (let i = 0; i < this.numPoints; i++) {
-            const angle = (i / this.numPoints) * Math.PI * 2;
-            this.points.push({
-                baseAngle: angle,
-                angle: angle,
-                radius: this.baseRadius,
-                noiseOffset: Math.random() * 1000,
-                x: 0,
-                y: 0
+    addRipple(x, y, size = 25) {
+        if (this.ripples.length < this.maxRipples) {
+            this.ripples.push({
+                x,
+                y,
+                size,
+                opacity: 0.8,  // Start with higher opacity
+                radius: 0,
+                maxRadius: size * 30,
+                speed: this.rippleSpeed,
+                timestamp: Date.now()
             });
         }
-        this.animate();
     }
 
-    setupEventListeners() {
-        const container = document.querySelector('.portrait-container');
-        container.addEventListener('mousemove', (e) => {
-            const rect = container.getBoundingClientRect();
-            const x = ((e.clientX - rect.left) / rect.width) * 500;
-            const y = ((e.clientY - rect.top) / rect.height) * 500;
-            this.mouse = { x, y };
-        });
-
-        container.addEventListener('mouseleave', () => {
-            this.mouse = { x: this.centerX, y: this.centerY };
-        });
-    }
-
-    noise(x, y) {
-        // Simple Perlin-like noise simulation
-        return Math.sin(x * this.noiseScale) * Math.cos(y * this.noiseScale) * 30;
-    }
-
-    updatePoints() {
-        this.time += this.morphSpeed;
+    startAutoRipples() {
+        if (this.autoRippleTimer) clearInterval(this.autoRippleTimer);
         
-        const dx = this.mouse.x - this.centerX;
-        const dy = this.mouse.y - this.centerY;
-        const mouseDistance = Math.sqrt(dx * dx + dy * dy);
-        const mouseAngle = Math.atan2(dy, dx);
-        
-        this.points.forEach(point => {
-            // Organic morphing
-            const noiseX = Math.cos(point.baseAngle) * 2 + this.time;
-            const noiseY = Math.sin(point.baseAngle) * 2 + this.time;
-            const morphing = this.noise(noiseX, noiseY);
-            
-            // Enhanced mouse interaction
-            const angleToMouse = Math.abs(point.baseAngle - mouseAngle) % (Math.PI * 2);
-            const mouseEffect = Math.max(0, 1 - mouseDistance / 250);  // Increased range
-            const mousePull = mouseEffect * this.mouseInfluence * 70 * 
-                            Math.exp(-angleToMouse * 2);
-            
-            point.radius = this.baseRadius + morphing + mousePull;
-            point.x = this.centerX + Math.cos(point.baseAngle) * point.radius;
-            point.y = this.centerY + Math.sin(point.baseAngle) * point.radius;
-        });
-    }
-
-    createPath() {
-        const points = [...this.points, ...this.points.slice(0, 2)];
-        let path = `M ${points[0].x} ${points[0].y}`;
-        
-        for (let i = 0; i < points.length - 2; i++) {
-            const p0 = points[i];
-            const p1 = points[i + 1];
-            const p2 = points[i + 2];
-            
-            // Calculate control points for smooth curves
-            const cx1 = p0.x + (p1.x - p0.x) * 0.6;
-            const cy1 = p0.y + (p1.y - p0.y) * 0.6;
-            const cx2 = p1.x - (p2.x - p1.x) * 0.4;
-            const cy2 = p1.y - (p2.y - p1.y) * 0.4;
-            
-            path += ` C ${cx1} ${cy1}, ${cx2} ${cy2}, ${p1.x} ${p1.y}`;
-        }
-        
-        return path;
+        this.autoRippleTimer = setInterval(() => {
+            const x = Math.random() * this.width;
+            const y = Math.random() * this.height;
+            this.addRipple(x, y, 15 + Math.random() * 15);
+        }, this.rippleInterval);
     }
 
     animate = () => {
-        this.updatePoints();
-        const path = this.createPath();
+        if (!this.ctx) return;
         
-        this.paths.forEach(pathElement => {
-            pathElement.setAttribute('d', path);
-        });
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        
+        for (let i = this.ripples.length - 1; i >= 0; i--) {
+            const ripple = this.ripples[i];
+            
+            ripple.radius += ripple.speed;
+            ripple.opacity -= this.rippleDecay;
+            
+            if (ripple.opacity <= 0 || ripple.radius >= ripple.maxRadius) {
+                this.ripples.splice(i, 1);
+                continue;
+            }
+            
+            this.ctx.beginPath();
+            this.ctx.strokeStyle = `rgba(${this.getRippleColor()}, ${ripple.opacity})`;
+            this.ctx.lineWidth = this.rippleLineWidth;
+            this.ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
         
         requestAnimationFrame(this.animate);
     }
 }
+
+// Initialize ripple effect after DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Small delay to ensure canvas is properly sized
+    setTimeout(() => {
+        const canvas = document.getElementById('waveCanvas');
+        if (canvas) {
+            new WaterRipple();
+        }
+    }, 100);
+});
+
+class ParticlePortrait {
+    constructor() {
+        this.canvas = document.getElementById('particleCanvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.mouse = { x: 0, y: 0 };
+        this.isHovering = false;
+        this.image = new Image();
+        this.image.src = 'assets/img/crypto_me.png';
+        
+        this.particleSize = 3;
+        this.particleSpacing = 4;
+        this.particleCount = 0;
+        this.maxSpeed = 4;
+        this.returnSpeed = 0.1;
+        this.mouseRadius = 100;
+        this.mouseForce = 0.2;
+        
+        this.setupCanvas();
+        this.setupEventListeners();
+        this.image.onload = () => this.init();
+    }
+
+    setupCanvas() {
+        this.canvas.width = 400;
+        this.canvas.height = 400;
+        this.ctx.imageSmoothingEnabled = true;
+    }
+
+    setupEventListeners() {
+        this.canvas.addEventListener('mousemove', (e) => {
+            const rect = this.canvas.getBoundingClientRect();
+            this.mouse.x = e.clientX - rect.left;
+            this.mouse.y = e.clientY - rect.top;
+            this.isHovering = true;
+        });
+
+        this.canvas.addEventListener('mouseleave', () => {
+            this.isHovering = false;
+        });
+    }
+
+    init() {
+        // Draw image to get pixel data
+        this.ctx.drawImage(this.image, 0, 0, this.canvas.width, this.canvas.height);
+        const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        const data = imageData.data;
+        
+        // Create particles
+        for (let y = 0; y < this.canvas.height; y += this.particleSpacing) {
+            for (let x = 0; x < this.canvas.width; x += this.particleSpacing) {
+                const i = (y * this.canvas.width + x) * 4;
+                const alpha = data[i + 3];
+                
+                if (alpha > 128) {  // Only create particles for non-transparent pixels
+                    this.particles.push({
+                        x: x,
+                        y: y,
+                        originX: x,
+                        originY: y,
+                        vx: 0,
+                        vy: 0,
+                        color: `rgba(${data[i]}, ${data[i + 1]}, ${data[i + 2]}, ${alpha / 255})`
+                    });
+                }
+            }
+        }
+        
+        this.animate();
+    }
+
+    update() {
+        this.particles.forEach(p => {
+            if (this.isHovering) {
+                const dx = this.mouse.x - p.x;
+                const dy = this.mouse.y - p.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < this.mouseRadius) {
+                    const force = (this.mouseRadius - distance) / this.mouseRadius;
+                    const angle = Math.atan2(dy, dx);
+                    const repelX = Math.cos(angle) * force * this.mouseForce;
+                    const repelY = Math.sin(angle) * force * this.mouseForce;
+                    p.vx -= repelX * this.maxSpeed;
+                    p.vy -= repelY * this.maxSpeed;
+                }
+            }
+            
+            // Return to original position
+            const dx = p.originX - p.x;
+            const dy = p.originY - p.y;
+            p.vx += dx * this.returnSpeed;
+            p.vy += dy * this.returnSpeed;
+            
+            // Apply velocity with damping
+            p.vx *= 0.95;
+            p.vy *= 0.95;
+            
+            // Update position
+            p.x += p.vx;
+            p.y += p.vy;
+        });
+    }
+
+    draw() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        this.particles.forEach(p => {
+            this.ctx.fillStyle = p.color;
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, this.particleSize, 0, Math.PI * 2);
+            this.ctx.fill();
+        });
+    }
+
+    animate = () => {
+        this.update();
+        this.draw();
+        requestAnimationFrame(this.animate);
+    }
+}
+
+// Initialize particle portrait after DOM loads
+document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('waveCanvas');
+    if (canvas) {
+        new WaterRipple();
+    }
+    
+    const particleCanvas = document.getElementById('particleCanvas');
+    if (particleCanvas) {
+        new ParticlePortrait();
+    }
+});

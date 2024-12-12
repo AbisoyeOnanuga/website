@@ -66,7 +66,6 @@ html {
 
 body {
   margin: 0;
-  padding: 1rem;
   border: 15px solid #0a0a0a;
   min-height: 100vh;
   font-optical-sizing: auto;
@@ -1215,15 +1214,12 @@ header a {
 
 .ripple-container {
     position: relative;
-    width: 100vw;
+    width: 100%;
     height: 270px;
-    margin-left: 50%;
-    transform: translateX(-50%);
     background-color: var(--bg-color);
     border-top: var(--box-border);
     border-bottom: var(--box-border);
     overflow: hidden;
-    z-index: -1;
 }
 
 #rippleCanvas {

@@ -45,6 +45,7 @@
   --transition-slow: 0.5s;
   --transition-medium: 0.3s;
   --transition-fast: 0.15s;
+  --transition-theme: 0.3s ease;
 }
 @media screen and (min-width: 1000px) {
   :root {
@@ -133,6 +134,9 @@ header a {
   margin-top: var(--mb-2);
   margin-bottom: var(--mb-4);
   text-align: center;
+  transition: color var(--transition-theme),
+              background-color var(--transition-theme),
+              border-color var(--transition-theme);
 }
 .section-title::after {
   position: absolute;
@@ -202,7 +206,9 @@ header a {
   display: inline-block;
   color: var(--text-color);
   text-decoration: none;
-  transition: color var(--transition-medium);
+  transition: color var(--transition-theme),
+              background-color var(--transition-theme),
+              border-color var(--transition-theme);
 }
 
 .nav__text {
@@ -303,6 +309,9 @@ header a {
   font-weight: var(--font-semi);
   border-radius: 0.5rem;
   transition: 0.3s;
+  transition: color var(--transition-theme),
+              background-color var(--transition-theme),
+              border-color var(--transition-theme);
 }
 .button:hover {
   box-shadow: 0px 10px 36px rgba(0, 0, 0, 0.15);
@@ -746,36 +755,44 @@ header a {
 /* Theme toggle button */
 .theme-toggle {
     position: relative;
-    width: 48px;
-    height: 24px;
-    padding: 0;
-    border: none;
-    background: transparent;
+    width: 40px;
+    height: 40px;
+    border: var(--box-border);
+    background: none;
     cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 
-.theme-toggle__wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background: var(--text-color);
-    border-radius: 12px;
-    transition: background var(--transition-medium);
-}
-
-.theme-toggle__circle {
+.theme-toggle::before {
+    content: '';
     position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 20px;
-    height: 20px;
-    background: var(--bg-color);
-    border-radius: 50%;
-    transition: transform var(--transition-medium);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background: var(--text-color);
+    transition: height var(--transition-medium);
+    z-index: 0;
 }
 
-[data-theme="dark"] .theme-toggle__circle {
-    transform: translateX(24px);
+.theme-toggle:hover::before {
+    height: 100%;
+}
+
+.theme-toggle i {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    position: relative;
+    z-index: 1;
+    transition: color var(--transition-medium);
+}
+
+.theme-toggle:hover i {
+    color: var(--bg-color);
 }
 
 /* Header Layout */
@@ -836,7 +853,9 @@ header a {
 .nav__link {
     position: relative;
     color: var(--text-color);
-    transition: color var(--transition-medium);
+    transition: color var(--transition-theme),
+                background-color var(--transition-theme),
+                border-color var(--transition-theme);
 }
 
 .nav__text {
@@ -871,7 +890,9 @@ header a {
 .social__link {
     color: var(--text-color);
     font-size: 1.25rem;
-    transition: color var(--transition-medium);
+    transition: color var(--transition-theme),
+                background-color var(--transition-theme),
+                border-color var(--transition-theme);
 }
 
 .social__link:hover {
@@ -881,42 +902,53 @@ header a {
 /* Theme Toggle */
 .header__controls {
     border: var(--box-border);
-    padding: 1rem;
+    padding: 0;
     display: flex;
     align-items: center;
 }
 
 .theme-toggle {
-    width: 48px;
-    height: 48px;
-    padding: 0;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    position: relative;
-}
-
-.theme-toggle__box {
     width: 100%;
     height: 100%;
+    min-width: 48px;
+    min-height: 48px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: var(--box-border);
-    transition: all var(--transition-medium);
+    position: relative;
+    overflow: hidden;
 }
 
-.theme-toggle__icon {
-    width: 24px;
-    height: 24px;
+.theme-toggle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
     background: var(--text-color);
-    border-radius: 50%;
-    transition: all var(--transition-medium);
+    transition: height var(--transition-medium);
+    z-index: 0;
 }
 
-[data-theme="dark"] .theme-toggle__icon {
-    background: var(--text-color);
-    box-shadow: 8px -8px 0 -4px var(--text-color);
+.theme-toggle:hover::before {
+    height: 100%;
+}
+
+.theme-toggle i {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    position: relative;
+    z-index: 1;
+    transition: color var(--transition-medium);
+}
+
+.theme-toggle:hover i {
+    color: var(--bg-color);
 }
 
 /* Hover Effects */
@@ -967,7 +999,9 @@ header a {
 .theme-toggle__box {
     position: relative;
     overflow: hidden;
-    transition: color var(--transition-medium);
+    transition: color var(--transition-theme),
+                background-color var(--transition-theme),
+                border-color var(--transition-theme);
 }
 
 .nav__link::before,
@@ -1423,4 +1457,31 @@ a-waves {
 
 [data-theme="dark"] .wave-line {
     stroke: rgba(255, 255, 255, 0.8);
+}
+
+/* Theme transition styles */
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ensure all color transitions are smooth */
+*,
+*::before,
+*::after {
+    transition: background-color 0.3s ease,
+                color 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+/* Theme toggle icon transition */
+.theme-toggle i {
+    transition: transform 0.3s ease, opacity 0.15s ease;
+}
+
+/* Remove any existing theme transition styles */
+.theme-transition-bar,
+.theme-mask,
+body::after {
+    display: none;
 }

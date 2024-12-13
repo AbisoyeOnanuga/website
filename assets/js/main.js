@@ -1,3 +1,13 @@
+/*!
+ * GSAP 3.12.5
+ * https://gsap.com
+ *
+ * @license Copyright 2008-2024, GreenSock. All rights reserved.
+ * Subject to the terms at https://gsap.com/standard-license or for
+ * Club GSAP members, the agreement issued with that membership.
+ * @author: Jack Doyle, jack@greensock.com
+*/
+
 /*===== MENU SHOW =====*/ 
 const showMenu = (toggleId, navId) =>{
     const toggle = document.getElementById(toggleId),
@@ -543,21 +553,27 @@ class AWaves extends HTMLElement {
         this.paths.forEach(path => path.remove());
         this.paths = [];
 
-        const xGap = 10;
-        const yGap = 32;
-        const oWidth = this.bounding.width + 200;
+        // Changed to create horizontal lines
+        const yGap = 15;  // Reduced gap between lines
+        const xGap = 10;  // Point spacing along each line
         const oHeight = this.bounding.height + 30;
-        const totalLines = Math.ceil(oWidth / xGap);
-        const totalPoints = Math.ceil(oHeight / yGap);
-        const xStart = (this.bounding.width - xGap * totalLines) / 2;
-        const yStart = (this.bounding.height - yGap * totalPoints) / 2;
+        const oWidth = this.bounding.width + 200;
+        
+        const totalLines = Math.ceil(oHeight / yGap);  // Number of horizontal lines
+        const totalPoints = Math.ceil(oWidth / xGap);  // Points per line
+        
+        const yStart = (this.bounding.height - yGap * totalLines) / 2;
+        const xStart = -100;  // Start off-screen for smooth entry/exit
 
         for (let i = 0; i <= totalLines; i++) {
             const points = [];
+            const y = yStart + yGap * i;
+            
             for (let j = 0; j <= totalPoints; j++) {
                 points.push({
-                    x: xStart + xGap * i,
-                    y: yStart + yGap * j,
+                    x: xStart + xGap * j,
+                    y: y,
+                    baseY: y,
                     wave: { x: 0, y: 0 },
                     cursor: { x: 0, y: 0, vx: 0, vy: 0 },
                 });
@@ -572,15 +588,22 @@ class AWaves extends HTMLElement {
     }
 
     movePoints(time) {
+        const scrollY = window.scrollY;
+        const scrollSpeed = (scrollY - (this.lastScrollY || scrollY)) * 0.1;
+        this.lastScrollY = scrollY;
+
         this.lines.forEach(points => {
             points.forEach(p => {
+                // Increased frequency and amplitude of waves
                 const move = this.noise.perlin2(
-                    (p.x + time * 0.0125) * 0.002,
-                    (p.y + time * 0.005) * 0.0015
-                ) * 12;
+                    (p.x + time * 0.02) * 0.006,  // Increased frequency
+                    (p.y + time * 0.01) * 0.003
+                ) * 15;  // Increased amplitude
                 
-                p.wave.x = Math.cos(move) * 32;
-                p.wave.y = Math.sin(move) * 16;
+                p.wave.y = Math.sin(move) * 20;  // Increased wave height
+                
+                // Add scroll influence
+                p.wave.y += scrollSpeed * 5;
 
                 const dx = p.x - this.mouse.sx;
                 const dy = p.y - this.mouse.sy;
@@ -591,17 +614,24 @@ class AWaves extends HTMLElement {
                     const s = 1 - d / l;
                     const f = Math.cos(d * 0.001) * s;
                     p.cursor.vx += Math.cos(this.mouse.a) * f * l * this.mouse.vs * 0.00065;
-                    p.cursor.vy += Math.sin(this.mouse.a) * f * l * this.mouse.vs * 0.00065;
+                    p.cursor.vy += Math.sin(this.mouse.a) * f * l * this.mouse.vs * 0.001;  // Increased vertical response
                 }
 
-                p.cursor.vx += (0 - p.cursor.x) * 0.005;
-                p.cursor.vy += (0 - p.cursor.y) * 0.005;
-                p.cursor.vx *= 0.925;
-                p.cursor.vy *= 0.925;
-                p.cursor.x += p.cursor.vx * 2;
-                p.cursor.y += p.cursor.vy * 2;
-                p.cursor.x = Math.min(100, Math.max(-100, p.cursor.x));
-                p.cursor.y = Math.min(100, Math.max(-100, p.cursor.y));
+                // Stronger spring effect
+                p.cursor.vx += (0 - p.cursor.x) * 0.01;
+                p.cursor.vy += (0 - p.cursor.y) * 0.01;
+                
+                // Less damping for more movement
+                p.cursor.vx *= 0.95;
+                p.cursor.vy *= 0.95;
+                
+                // Increased movement range
+                p.cursor.x += p.cursor.vx * 2.5;
+                p.cursor.y += p.cursor.vy * 2.5;
+                
+                // Increased movement limits
+                p.cursor.x = Math.min(150, Math.max(-150, p.cursor.x));
+                p.cursor.y = Math.min(150, Math.max(-150, p.cursor.y));
             });
         });
     }
@@ -659,8 +689,56 @@ class Noise {
     }
 
     perlin2(x, y) {
-        return (Math.sin(x * this.seed) * Math.cos(y * this.seed)) * 0.5;
+        // More complex noise pattern for more interesting waves
+        return (Math.sin(x * this.seed + Math.cos(y * 0.5)) * 
+                Math.cos(y * this.seed + Math.sin(x * 0.5))) * 0.5;
     }
 }
 
 customElements.define('a-waves', AWaves);
+
+function toggleTheme() {
+    const currentTheme = root.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    // Create or get mask element
+    let themeMask = document.querySelector('.theme-mask');
+    if (!themeMask) {
+        themeMask = document.createElement('div');
+        themeMask.className = 'theme-mask';
+        document.body.appendChild(themeMask);
+    }
+
+    // Set initial position
+    const startPos = currentTheme === 'light' ? '0' : '-100%';
+    const endPos = currentTheme === 'light' ? '-100%' : '0';
+    
+    // Reset mask position
+    themeMask.style.transform = `translateY(${startPos})`;
+    
+    // Animate mask
+    themeMask.style.transition = 'transform 1s cubic-bezier(0.7, 0, 0.3, 1)';
+    themeMask.style.transform = `translateY(${endPos})`;
+
+    // Change theme when animation completes
+    setTimeout(() => {
+        root.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // Reset mask
+        themeMask.style.transition = 'none';
+        themeMask.style.transform = '';
+    }, 1000);
+}
+
+// Make sure the theme toggle button is connected
+document.addEventListener('DOMContentLoaded', () => {
+    const themeToggle = document.querySelector('.theme-toggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+    
+    // Initialize theme from localStorage
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+});

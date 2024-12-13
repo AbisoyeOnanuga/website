@@ -944,19 +944,19 @@ body::after {
 
 /* Show/hide icons based on theme */
 [data-theme="light"] .bxs-sun {
-    display: block;
+    display: block !important;
 }
 
 [data-theme="light"] .bxs-moon {
-    display: none;
+    display: none !important;
 }
 
 [data-theme="dark"] .bxs-sun {
-    display: none;
+    display: none !important;
 }
 
 [data-theme="dark"] .bxs-moon {
-    display: block;
+    display: block !important;
 }
 
 .theme-toggle i {

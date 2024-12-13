@@ -755,12 +755,14 @@ header a {
 /* Theme toggle button */
 .theme-toggle {
     position: relative;
-    width: 40px;
-    height: 40px;
-    border: var(--box-border);
+    width: 100%;
+    height: 100%;
+    min-width: 48px;
+    min-height: 48px;
+    border: none;
     background: none;
     cursor: pointer;
-    padding: 0;
+    padding: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -775,7 +777,7 @@ header a {
     width: 100%;
     height: 0;
     background: var(--text-color);
-    transition: height var(--transition-medium);
+    transition: height var(--transition-fast);
     z-index: 0;
 }
 
@@ -788,7 +790,7 @@ header a {
     color: var(--text-color);
     position: relative;
     z-index: 1;
-    transition: color var(--transition-medium);
+    transition: color var(--transition-fast);
 }
 
 .theme-toggle:hover i {
@@ -931,7 +933,7 @@ header a {
     width: 100%;
     height: 0;
     background: var(--text-color);
-    transition: height var(--transition-medium);
+    transition: height var(--transition-fast);
     z-index: 0;
 }
 
@@ -944,7 +946,7 @@ header a {
     color: var(--text-color);
     position: relative;
     z-index: 1;
-    transition: color var(--transition-medium);
+    transition: color var(--transition-fast);
 }
 
 .theme-toggle:hover i {
@@ -1484,4 +1486,26 @@ body {
 .theme-mask,
 body::after {
     display: none;
+}
+
+/* Remove all slow transitions */
+.theme-transition-bar,
+.theme-mask,
+body::after {
+    display: none;
+}
+
+/* Only keep fast transitions for color changes */
+[data-theme] {
+    transition: none;
+}
+
+body {
+    transition: background-color var(--transition-fast);
+}
+
+* {
+    transition: color var(--transition-fast),
+                background-color var(--transition-fast),
+                border-color var(--transition-fast);
 }

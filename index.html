@@ -19,68 +19,48 @@
             <!--===== HEADER =====-->
             <header class="l-header">
                 <div class="header__container">
-                    <!-- Logo Section -->
-                    <div class="header__logo">
-                        <a href="#" class="logo__link">
-                            <div class="logo__initials">
-                                <span class="logo__text">A</span>
-                                <span class="logo__text">O</span>
-                            </div>
-                        </a>
-                    </div>
-
-                    <!-- Navigation Section -->
-                    <div class="header__nav">
-                        <div class="nav__row">
-                            <nav class="nav__menu">
-                                <ul class="nav__list">
-                                    <li class="nav__item">
-                                        <a href="#home" class="nav__link">
-                                            <span class="nav__text">Home</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="#about" class="nav__link">
-                                            <span class="nav__text">About</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="#projects" class="nav__link">
-                                            <span class="nav__text">Projects</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="#awards" class="nav__link">
-                                            <span class="nav__text">Awards</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="#mentorship" class="nav__link">
-                                            <span class="nav__text">Mentorship</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
+                    <div class="header__top">
+                        <div class="header__logo">
+                            <a href="#" class="logo__link">
+                                <div class="logo__initials">
+                                    <span class="logo__text">A</span>
+                                    <span class="logo__text">O</span>
+                                </div>
+                            </a>
                         </div>
-                        <div class="nav__row">
-                            <div class="social__links">
-                                <a href="https://github.com/AbisoyeOnanuga/" class="social__link">
-                                    <i class='bx bxl-github'></i>
-                                </a>
-                                <a href="https://www.linkedin.com/in/abisoye-onanuga-b0aaa5133/" class="social__link">
-                                    <i class='bx bxl-linkedin'></i>
-                                </a>
-                            </div>
+                        
+                        <div class="social__links">
+                            <a href="https://github.com/AbisoyeOnanuga/" class="social__link" target="_blank">
+                                <i class='bx bxl-github'></i>
+                            </a>
+                            <a href="https://www.linkedin.com/in/abisoye-onanuga-b0aaa5133/" class="social__link" target="_blank">
+                                <i class='bx bxl-linkedin'></i>
+                            </a>
                         </div>
-                    </div>
 
-                    <!-- Theme Toggle Section -->
-                    <div class="header__controls">
-                        <button class="theme-toggle" aria-label="Toggle theme">
-                            <i class='bx bxs-sun'></i>
-                            <i class='bx bxs-moon' style="display: none;"></i>
+                        <button class="nav__toggle" id="nav-toggle">
+                            <i class='bx bx-menu'></i>
                         </button>
+
+                        <div class="header__controls">
+                            <button class="theme-toggle" aria-label="Toggle theme">
+                                <i class='bx bxs-sun'></i>
+                                <i class='bx bxs-moon' style="display: none;"></i>
+                            </button>
+                        </div>
                     </div>
+                    
+                    <nav class="header__nav" id="nav-menu">
+                        <div class="nav__content">
+                            <ul class="nav__list">
+                                <li class="nav__item"><a href="#home" class="nav__link">Home</a></li>
+                                <li class="nav__item"><a href="#about" class="nav__link">About</a></li>
+                                <li class="nav__item"><a href="#projects" class="nav__link">Projects</a></li>
+                                <li class="nav__item"><a href="#awards" class="nav__link">Awards</a></li>
+                                <li class="nav__item"><a href="#mentorship" class="nav__link">Mentorship</a></li>
+                            </ul>
+                        </div>
+                    </nav>
                 </div>
             </header>
             <!-- Ripple Section -->
@@ -340,5 +320,14 @@
     
             <!--===== MAIN JS =====-->
             <script src="assets/js/main.js"></script>
+            <div class="nav-overlay"></div>
+            <div class="social__links">
+                <a href="https://github.com/AbisoyeOnanuga/" class="social__link" target="_blank">
+                    <i class='bx bxl-github'></i>
+                </a>
+                <a href="https://www.linkedin.com/in/abisoye-onanuga-b0aaa5133/" class="social__link" target="_blank">
+                    <i class='bx bxl-linkedin'></i>
+                </a>
+            </div>
     </body>
 </html>

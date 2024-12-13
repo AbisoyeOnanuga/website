@@ -292,7 +292,7 @@ class RippleEffect {
         this.ripples = [];
         this.baseVelocity = 1.5;
         this.maxRipples = 25;
-        this.rippleInterval = 2000;
+        this.rippleInterval = 3000;
         this.rippleGap = 20;
         this.concentricCount = 3;
         this.lastMouseX = 0;
@@ -303,11 +303,47 @@ class RippleEffect {
         this.lastClickTime = 0;
         this.clickCooldown = 100;
         
+        this.autoRippleTimer = null;
+
         this.bindEvents();
         this.animate();
-        this.createAutoRipple();
+        this.startAutoRipples();
     }
     
+    startAutoRipples() {
+        // Clear any existing interval
+        if (this.autoRippleTimer) {
+            clearInterval(this.autoRippleTimer);
+        }
+
+        // Create initial ripple
+        this.createAutoRipple();
+
+        // Set up interval for continuous ripples
+        this.autoRippleTimer = setInterval(() => {
+            this.createAutoRipple();
+        }, this.rippleInterval);
+    }
+
+    createAutoRipple() {
+        const padding = 100; // Keep ripples away from edges
+        const x = padding + Math.random() * (this.canvas.width - 2 * padding);
+        const y = padding + Math.random() * (this.canvas.height - 2 * padding);
+        
+        // Create ripple with random size variation
+        const velocityVariation = 0.5 + Math.random() * 0.5;
+        this.createRipple(x, y, this.baseVelocity * velocityVariation);
+
+        // Occasionally create a cluster of ripples
+        if (Math.random() < 0.3) {  // 30% chance
+            setTimeout(() => {
+                const closeX = x + (Math.random() - 0.5) * 50;
+                const closeY = y + (Math.random() - 0.5) * 50;
+                this.createRipple(closeX, closeY, this.baseVelocity * velocityVariation);
+            }, 100);
+        }
+    }
+
     bindEvents() {
         let lastRippleX = 0;
         let lastRippleY = 0;
@@ -428,6 +464,203 @@ class RippleEffect {
 document.addEventListener('DOMContentLoaded', () => {
     const rippleCanvas = document.getElementById('rippleCanvas');
     if (rippleCanvas) {
-        new RippleEffect();
+        const rippleEffect = new RippleEffect();
     }
 });
+
+// Remove the FlowingGradient class and its initialization
+
+class AWaves extends HTMLElement {
+    connectedCallback() {
+        this.svg = this.querySelector('.js-svg');
+        
+        this.mouse = {
+            x: -10,
+            y: 0,
+            lx: 0,
+            ly: 0,
+            sx: 0,
+            sy: 0,
+            v: 0,
+            vs: 0,
+            a: 0,
+            set: false,
+        };
+
+        this.lines = [];
+        this.paths = [];
+        this.noise = new Noise(Math.random());
+
+        this.setSize();
+        this.setLines();
+        this.bindEvents();
+        
+        requestAnimationFrame(this.tick.bind(this));
+    }
+
+    bindEvents() {
+        window.addEventListener('resize', this.onResize.bind(this));
+        window.addEventListener('mousemove', this.onMouseMove.bind(this));
+        this.addEventListener('touchmove', this.onTouchMove.bind(this));
+    }
+
+    onResize() {
+        this.setSize();
+        this.setLines();
+    }
+
+    onMouseMove(e) {
+        this.updateMousePosition(e.pageX, e.pageY);
+    }
+
+    onTouchMove(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        this.updateMousePosition(touch.clientX, touch.clientY);
+    }
+
+    updateMousePosition(x, y) {
+        this.mouse.x = x - this.bounding.left;
+        this.mouse.y = y - this.bounding.top + window.scrollY;
+
+        if (!this.mouse.set) {
+            this.mouse.sx = this.mouse.x;
+            this.mouse.sy = this.mouse.y;
+            this.mouse.lx = this.mouse.x;
+            this.mouse.ly = this.mouse.y;
+            this.mouse.set = true;
+        }
+    }
+
+    setSize() {
+        this.bounding = this.getBoundingClientRect();
+        this.svg.style.width = `${this.bounding.width}px`;
+        this.svg.style.height = `${this.bounding.height}px`;
+    }
+
+    setLines() {
+        this.lines = [];
+        this.paths.forEach(path => path.remove());
+        this.paths = [];
+
+        const xGap = 10;
+        const yGap = 32;
+        const oWidth = this.bounding.width + 200;
+        const oHeight = this.bounding.height + 30;
+        const totalLines = Math.ceil(oWidth / xGap);
+        const totalPoints = Math.ceil(oHeight / yGap);
+        const xStart = (this.bounding.width - xGap * totalLines) / 2;
+        const yStart = (this.bounding.height - yGap * totalPoints) / 2;
+
+        for (let i = 0; i <= totalLines; i++) {
+            const points = [];
+            for (let j = 0; j <= totalPoints; j++) {
+                points.push({
+                    x: xStart + xGap * i,
+                    y: yStart + yGap * j,
+                    wave: { x: 0, y: 0 },
+                    cursor: { x: 0, y: 0, vx: 0, vy: 0 },
+                });
+            }
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.classList.add('a__line');
+            this.svg.appendChild(path);
+            this.paths.push(path);
+            this.lines.push(points);
+        }
+    }
+
+    movePoints(time) {
+        this.lines.forEach(points => {
+            points.forEach(p => {
+                const move = this.noise.perlin2(
+                    (p.x + time * 0.0125) * 0.002,
+                    (p.y + time * 0.005) * 0.0015
+                ) * 12;
+                
+                p.wave.x = Math.cos(move) * 32;
+                p.wave.y = Math.sin(move) * 16;
+
+                const dx = p.x - this.mouse.sx;
+                const dy = p.y - this.mouse.sy;
+                const d = Math.hypot(dx, dy);
+                const l = Math.max(175, this.mouse.vs);
+
+                if (d < l) {
+                    const s = 1 - d / l;
+                    const f = Math.cos(d * 0.001) * s;
+                    p.cursor.vx += Math.cos(this.mouse.a) * f * l * this.mouse.vs * 0.00065;
+                    p.cursor.vy += Math.sin(this.mouse.a) * f * l * this.mouse.vs * 0.00065;
+                }
+
+                p.cursor.vx += (0 - p.cursor.x) * 0.005;
+                p.cursor.vy += (0 - p.cursor.y) * 0.005;
+                p.cursor.vx *= 0.925;
+                p.cursor.vy *= 0.925;
+                p.cursor.x += p.cursor.vx * 2;
+                p.cursor.y += p.cursor.vy * 2;
+                p.cursor.x = Math.min(100, Math.max(-100, p.cursor.x));
+                p.cursor.y = Math.min(100, Math.max(-100, p.cursor.y));
+            });
+        });
+    }
+
+    moved(point, withCursorForce = true) {
+        return {
+            x: Math.round((point.x + point.wave.x + (withCursorForce ? point.cursor.x : 0)) * 10) / 10,
+            y: Math.round((point.y + point.wave.y + (withCursorForce ? point.cursor.y : 0)) * 10) / 10,
+        };
+    }
+
+    drawLines() {
+        this.lines.forEach((points, i) => {
+            let p1 = this.moved(points[0], false);
+            let d = `M ${p1.x} ${p1.y}`;
+
+            points.forEach((p1, j) => {
+                const isLast = j === points.length - 1;
+                p1 = this.moved(p1, !isLast);
+                d += `L ${p1.x} ${p1.y}`;
+            });
+
+            this.paths[i].setAttribute('d', d);
+        });
+    }
+
+    tick(time) {
+        const { mouse } = this;
+        mouse.sx += (mouse.x - mouse.sx) * 0.1;
+        mouse.sy += (mouse.y - mouse.sy) * 0.1;
+
+        const dx = mouse.x - mouse.lx;
+        const dy = mouse.y - mouse.ly;
+        const d = Math.hypot(dx, dy);
+
+        mouse.v = d;
+        mouse.vs += (d - mouse.vs) * 0.1;
+        mouse.vs = Math.min(100, mouse.vs);
+
+        mouse.lx = mouse.x;
+        mouse.ly = mouse.y;
+        mouse.a = Math.atan2(dy, dx);
+
+        this.movePoints(time);
+        this.drawLines();
+        
+        requestAnimationFrame(this.tick.bind(this));
+    }
+}
+
+// Simple Perlin noise implementation
+class Noise {
+    constructor(seed) {
+        this.seed = seed;
+    }
+
+    perlin2(x, y) {
+        return (Math.sin(x * this.seed) * Math.cos(y * this.seed)) * 0.5;
+    }
+}
+
+customElements.define('a-waves', AWaves);

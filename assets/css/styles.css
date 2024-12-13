@@ -1235,3 +1235,192 @@ header a {
         height: 200px;
     }
 }
+
+/* Perspective section styles */
+.perspective-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: var(--bg-color);
+}
+
+.perspective-content {
+    position: relative;
+    z-index: 2;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease-out;
+}
+
+.perspective-section {
+    position: relative;
+    padding: 4rem 2rem;
+    transition: transform 0.3s ease-out;
+}
+
+.perspective-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.grid-hex {
+    position: absolute;
+    width: 100px;
+    height: 115.47px;
+    background: var(--first-color);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    opacity: 0.1;
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+}
+
+/* Section specific styles */
+.about-section {
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+.skills-section {
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .grid-hex {
+    background: var(--accent-dark);
+}
+
+.interactive-section {
+    position: relative;
+    padding: 4rem 2rem;
+    overflow: hidden;
+}
+
+.section-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.3;
+    z-index: 0;
+}
+
+.interactive-section > * {
+    position: relative;
+    z-index: 1;
+}
+
+.about-section, .skills-section {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.box-container {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: auto;
+    transform-style: preserve-3d;
+    perspective: 1500px;
+    overflow: visible;
+    padding: 4rem;
+    background: var(--bg-color);
+    border: var(--box-border);
+}
+
+.grid-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+a-waves {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.js-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.a__line {
+    fill: none;
+    stroke: var(--text-color);
+    stroke-width: 1;
+    opacity: 0.3;
+    transition: stroke 0.3s ease;
+}
+
+[data-theme="dark"] .a__line {
+    stroke: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="light"] .a__line {
+    stroke: rgba(0, 0, 0, 0.7);
+}
+
+.box-content {
+    position: relative;
+    z-index: 1;
+    width: 80%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    transform-style: preserve-3d;
+}
+
+.about-section,
+.skills-section {
+    position: relative;
+    z-index: 2;
+    background: var(--bg-color);
+    padding: 3rem;
+    margin: 2rem auto;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+    transform-style: preserve-3d;
+    transform: translateZ(50px);
+    max-width: 900px;
+}
+
+.wave-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.wave-line {
+    fill: none;
+    stroke: var(--text-color);
+    stroke-width: 1;
+    opacity: 0.15;
+    transition: stroke 0.3s ease;
+}
+
+[data-theme="dark"] .wave-line {
+    stroke: rgba(255, 255, 255, 0.8);
+}

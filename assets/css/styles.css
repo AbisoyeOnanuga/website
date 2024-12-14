@@ -1958,25 +1958,25 @@ body {
     .about__container {
         display: flex;
         flex-direction: column;
-        gap: 2rem;
-        padding: 0 1rem;
+        align-items: center;
+        padding: 1rem;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .about__img {
-        width: 100%;
-        max-width: 200px;
-        margin: 0 auto;
-    }
-
-    .about__img img {
-        width: 100%;
+        max-width: 100%;
         height: auto;
     }
 
-    .about__text {
-        font-size: 0.9rem;
-        text-align: left;
-        width: 100%;
+    .about__subtitle {
+        text-align: center;
+        margin: 0;
+    }
+
+    .nowrap {
+        display: inline-block;
+        white-space: nowrap;
     }
 }
 
@@ -2043,29 +2043,36 @@ body {
     }
 
     .skills__row {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 1rem;
         margin-bottom: 1rem;
     }
 
     .skills__data {
         display: flex;
-        flex-direction: column;
         align-items: center;
-        padding: 0.75rem;
+        justify-content: center;
+        padding: 0.5rem;
         background: var(--bg-color);
-        border: var(--box-border);
-        border-radius: 0.5rem;
+        border: 1px solid var(--text-color);
+        width: 100px;
+        height: 50px;
+        transition: background-color 0.3s ease;
+    }
+
+    .skills__data:hover {
+        background-color: rgba(0, 0, 0, 0.1);
     }
 
     .skills__icon {
         font-size: 1.5rem;
-        margin-bottom: 0.5rem;
+        margin-right: 0.5rem;
     }
 
     .skills__name {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         text-align: center;
     }
 
@@ -2329,4 +2336,16 @@ body {
         flex-direction: row;
         gap: 2rem;
     }
+}
+
+[data-theme="dark"] .project-card {
+    border: 1px solid white; /* White border for dark theme */
+}
+
+[data-theme="dark"] .other-section {
+    border: 1px solid white; /* Adjust as necessary for other sections */
+}
+
+[data-theme="dark"] .footer {
+    color: var(--first-color); /* Use the same color as section titles */
 }

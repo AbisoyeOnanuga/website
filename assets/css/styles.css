@@ -240,6 +240,119 @@ header a {
   transform-origin: left;
 }
 
+/* Header Layout */
+.header__top {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  gap: 0; /* Remove gap to make boxes tight */
+  background: var(--bg-color);
+  position: relative;
+  z-index: 1001;
+}
+
+/* Logotype */
+.header__logo {
+  width: 48px; /* Set width */
+  height: 48px; /* Set height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Theme Toggle */
+.header__controls {
+  margin-left: auto; /* Push controls to the right */
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border: 1px solid var(--text-color); /* Border around theme toggle */
+  background: var(--bg-color); /* Match background with header */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover */
+  height: 48px; /* Match height with logotype */
+}
+
+.theme-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.1); /* Hover effect */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Social Links */
+.social__links {
+  display: flex;
+  flex-direction: column; /* Stack icons vertically */
+  justify-content: center;
+  align-items: center;
+  gap: 0; /* Remove gap to make boxes tight */
+  padding: 0.5rem;
+  border: 1px solid var(--text-color); /* Border around social links */
+  background: var(--bg-color); /* Match background with header */
+  height: 48px; /* Match height with theme toggle */
+}
+
+.social__link {
+  font-size: 1.5rem; /* Increase icon size */
+  color: var(--text-color); /* Match text color */
+  transition: color 0.3s ease, background-color 0.3s ease; /* Add transition for hover effect */
+  padding: 0.5rem; /* Add padding for hover area */
+  width: 100%; /* Make the link cover the entire box */
+  text-align: center; /* Center the icon */
+}
+
+.social__link:hover {
+  color: var(--first-color); /* Change color on hover */
+  background-color: black; /* Add hover background */
+}
+
+/* Navigation List */
+.header__nav {
+  padding: 0.5rem; /* Padding inside nav */
+}
+
+.nav__list {
+  display: flex;
+  flex-direction: row; /* Horizontal layout */
+  gap: 0; /* Remove gap to make boxes tight */
+  align-items: center; /* Center items vertically */
+  border: 1px solid var(--text-color); /* Border around nav list */
+}
+
+.nav__item {
+  padding: 0.5rem 1rem; /* Increase padding for larger boxes */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover */
+}
+
+.nav__link {
+  font-size: 1.25rem; /* Increase text size */
+  color: var(--text-color); /* Match text color */
+  text-decoration: none; /* Remove underline */
+}
+
+/* Hover effect for nav items */
+.nav__item:hover {
+  background-color: black; /* Change background on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+  color: white; /* Change text color on hover for light theme */
+}
+
+/* Remove border-radius from nav and icon boxes */
+.header__nav,
+.social__links,
+.theme-toggle {
+  border-radius: 0; /* No border-radius */
+}
+
+/* Ensure logotype and theme toggle are square */
+.header__logo,
+.theme-toggle {
+  width: 48px; /* Set width */
+  height: 48px; /* Set height */
+}
+
 /*===== HOME =====*/
 .home {
   position: relative;
@@ -547,10 +660,6 @@ header a {
 /* Dark theme colors */
 [data-theme="dark"] .footer-social .social__link {
   color: var(--text-dark); /* Use dark text color for dark theme */
-}
-
-.footer-social .social__link:hover {
-  color: var(--first-color); /* Change color on hover */
 }
 
 .footer__title {
@@ -954,10 +1063,6 @@ body::after {
                 border-color var(--transition-theme);
 }
 
-.social__link:hover {
-    color: var(--accent-color);
-}
-
 /* Theme Toggle */
 .header__controls {
     position: relative;
@@ -1076,7 +1181,6 @@ body.theme-switching::before {
 }
 
 /* Updated hover animations */
-.nav__link,
 .social__link,
 .button,
 .header__logo,
@@ -1109,15 +1213,15 @@ body.theme-switching::before {
 .button:hover::before,
 .header__logo:hover::before,
 .theme-toggle__box:hover::before {
-    height: 100%;
+  height: 100%;
 }
 
-.nav__link:hover,
 .social__link:hover,
+.nav__link:hover,
 .button:hover,
 .header__logo:hover .logo__text,
 .theme-toggle__box:hover .theme-toggle__icon {
-    color: var(--bg-color);
+  color: var(--bg-color);
 }
 
 /* Updated footer style */
@@ -1778,150 +1882,150 @@ body {
 
 /* Additional adjustments for very small screens */
 @media screen and (max-width: 360px) {
-    .portrait-container {
-        width: 240px;
-        height: 240px;
-    }
+  .portrait-container {
+    width: 240px;
+    height: 240px;
+  }
 
-    .skills__table {
-        grid-template-columns: 1fr;
-    }
+  .skills__table {
+    grid-template-columns: 1fr;
+  }
 
-    .project-card__tags {
-        gap: 0.25rem;
-    }
+  .project-card__tags {
+    gap: 0.25rem;
+  }
 
-    .project-card__tags span {
-        padding: 0.15rem 0.5rem;
-        font-size: 0.7rem;
-    }
+  .project-card__tags span {
+    padding: 0.15rem 0.5rem;
+    font-size: 0.7rem;
+  }
 }
 
 /* Base mobile adjustments */
 @media screen and (max-width: 768px) {
-    /* Fix horizontal scroll issues */
-    body {
-        overflow-x: hidden;
-        width: 100%;
-        border-width: 8px; /* Reduce border thickness on mobile */
-    }
+  /* Fix horizontal scroll issues */
+  body {
+    overflow-x: hidden;
+    width: 100%;
+    border-width: 8px; /* Reduce border thickness on mobile */
+  }
 
-    /* Container width fixes */
-    .bd-grid {
-        margin-left: 1rem;
-        margin-right: 1rem;
-        width: calc(100% - 2rem);
-    }
+  /* Container width fixes */
+  .bd-grid {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    width: calc(100% - 2rem);
+  }
 
-    /* Header fixes */
-    .header__container {
-        padding: 0.5rem;
-        width: 100%;
-        flex-wrap: wrap;
-    }
+  /* Header fixes */
+  .header__container {
+    padding: 0.5rem;
+    width: 100%;
+    flex-wrap: wrap;
+  }
 
-    .nav__row {
-        width: 100%;
-        justify-content: center;
-    }
+  .nav__row {
+    width: 100%;
+    justify-content: center;
+  }
 
-    /* Home section fixes */
-    .home {
-        padding: 2rem 0;
-    }
+  /* Home section fixes */
+  .home {
+    padding: 2rem 0;
+  }
 
-    .home__content {
-        flex-direction: column;
-        align-items: center;
-        margin: 0;
-        padding: 1rem;
-        width: 100%;
-    }
+  .home__content {
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 1rem;
+    width: 100%;
+  }
 
-    .main-title {
-        font-size: 2rem;
-        text-align: center;
-    }
+  .main-title {
+    font-size: 2rem;
+    text-align: center;
+  }
 
-    /* Typing container fixes */
-    .typing-container-wrapper {
-        width: 100%;
-        margin: 0;
-        padding: 1rem 0;
-        transform: none;
-        left: 0;
-    }
+  /* Typing container fixes */
+  .typing-container-wrapper {
+    width: 100%;
+    margin: 0;
+    padding: 1rem 0;
+    transform: none;
+    left: 0;
+  }
 
-    .typing-wrapper {
-        font-size: 1.5rem;
-        padding: 0 1rem;
-    }
+  .typing-wrapper {
+    font-size: 1.5rem;
+    padding: 0 1rem;
+  }
 
-    /* Box container fixes */
-    .box-container {
-        padding: 1rem;
-        margin: 1rem 0;
-        width: 100%;
-        overflow: hidden;
-    }
+  /* Box container fixes */
+  .box-container {
+    padding: 1rem;
+    margin: 1rem 0;
+    width: 100%;
+    overflow: hidden;
+  }
 
-    .box-content {
-        width: 100%;
-        padding: 0.5rem;
-    }
+  .box-content {
+    width: 100%;
+    padding: 0.5rem;
+  }
 
-    /* Skills section fixes */
-    .skills__container {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
+  /* Skills section fixes */
+  .skills__container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 
-    .skills__img {
-        width: 100%;
-        height: auto;
-    }
+  .skills__img {
+    width: 100%;
+    height: auto;
+  }
 
-    /* Project cards fixes */
-    .project-card {
-        width: 100%;
-        margin: 0;
-    }
+  /* Project cards fixes */
+  .project-card {
+    width: 100%;
+    margin: 0;
+  }
 
-    .project-card__content {
-        width: 100%;
-    }
+  .project-card__content {
+    width: 100%;
+  }
 
-    .project-card__info {
-        padding: 1rem;
-    }
+  .project-card__info {
+    padding: 1rem;
+  }
 
-    /* Awards and Mentorship fixes */
-    .award__container {
-        width: 100%;
-        margin: 0;
-        padding: 1rem;
-    }
+  /* Awards and Mentorship fixes */
+  .award__container {
+    width: 100%;
+    margin: 0;
+    padding: 1rem;
+  }
 
-    .award__container ul {
-        padding: 0;
-        margin: 0;
-    }
+  .award__container ul {
+    padding: 0;
+    margin: 0;
+  }
 
-    .award__container li {
-        margin-bottom: 0.5rem;
-        padding: 0.75rem;
-        font-size: 0.9rem;
-    }
+  .award__container li {
+    margin-bottom: 0.5rem;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
 
-    /* Footer fixes */
-    .footer {
-        padding: 1rem;
-        text-align: center;
-    }
+  /* Footer fixes */
+  .footer {
+    padding: 1rem;
+    text-align: center;
+  }
 
-    .footer__social {
-        justify-content: center;
-    }
+  .footer__social {
+    justify-content: center;
+  }
 }
 
 /* Very small screens */
@@ -1990,10 +2094,6 @@ body {
     transition: color 0.3s ease; /* Add transition for hover effect */
 }
 
-.footer-social .social__link:hover {
-    color: var(--first-color); /* Change color on hover */
-}
-
 /* Buttons and Cards */
 .button,
 .project-card,
@@ -2009,80 +2109,4 @@ body {
 
 [data-theme="dark"] .project-card {
     border: 1px solid white; /* White border for dark theme */
-}
-
-/* Header Layout */
-.header__top {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem;
-    gap: 1rem;
-    background: var(--bg-color);
-    position: relative;
-    z-index: 1001;
-}
-
-/* Theme Toggle */
-.header__controls {
-    margin-left: auto; /* Push controls to the right */
-}
-
-/* Social Links */
-.social__links {
-    display: flex;
-    flex-direction: column; /* Stack icons vertically */
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem; /* Space between icons */
-    padding: 0.5rem;
-    border: 1px solid var(--text-color); /* Border around social links */
-    background: var(--bg-color); /* Match background with header */
-}
-
-.social__link {
-    font-size: 1.5rem; /* Increase icon size */
-    color: var(--text-color); /* Match text color */
-    transition: color 0.3s ease; /* Add transition for hover effect */
-    padding: 0.5rem; /* Add padding for hover area */
-    width: 100%; /* Make the link cover the entire box */
-    text-align: center; /* Center the icon */
-}
-
-.social__link:hover {
-    color: var(--first-color); /* Change color on hover */
-    background-color: rgba(0, 0, 0, 0.1); /* Add hover background */
-}
-
-/* Navigation List */
-.header__nav {
-    border: 1px solid var(--text-color); /* Border around nav */
-    padding: 0.5rem; /* Padding inside nav */
-}
-
-.nav__list {
-    display: flex;
-    flex-direction: row; /* Horizontal layout */
-    gap: 1rem; /* Space between items */
-}
-
-.nav__item {
-    padding: 0.5rem 1rem; /* Increase padding for larger boxes */
-    transition: background-color 0.3s ease; /* Smooth transition for hover */
-}
-
-.nav__link {
-    font-size: 1.25rem; /* Increase text size */
-    color: var(--text-color); /* Match text color */
-    text-decoration: none; /* Remove underline */
-}
-
-.nav__item:hover {
-    background-color: rgba(0, 0, 0, 0.1); /* Change background on hover */
-    width: 100%; /* Ensure hover covers the entire nav item */
-}
-
-/* Remove border-radius from nav and icon boxes */
-.header__nav,
-.social__links {
-    border-radius: 0; /* No border-radius */
 }

@@ -465,24 +465,29 @@ header a {
 /* ===== AWARDS =====*/
 .award__container {
   padding: 2rem;
-  background: #f8f8f8; /* Light background for the container */
+  border: 1px solid black; /* Black border for the card */
+  border-radius: 8px; /* Optional: Add some border radius */
+  background: transparent; /* Remove background color */
 }
+
 .award__container ul {
   list-style: none; /* Removes default bullets */
   padding: 0;
 }
+
 .award__container li {
-  background: linear-gradient(135deg, #e4e4e4 0%, #ffffff 100%); /* Subtle gradient for each item */
+  background: transparent; /* Remove background */
   margin-bottom: 1rem; /* Space between items */
   padding: 1rem; /* Padding inside each item */
-  border-left: 4px solid #008000; /* Left border for a touch of color */
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Soft shadow for depth */
+  border-left: 4px solid black; /* Left border for a touch of color */
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
 }
+
 .award__container li:hover {
   transform: translateY(-5px); /* Slight raise effect on hover */
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Enhanced shadow on hover */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
 }
+
 .section-title {
   text-align: center; /* Center align the section title */
   margin-bottom: 2rem; /* Space after the title */
@@ -510,12 +515,37 @@ header a {
 
 /* ===== FOOTER =====*/
 .footer {
-  background-color: var(--second-color);
-  color: #fff;
-  text-align: center;
-  font-weight: var(--font-semi);
-  padding: 2rem 0;
+  background: var(--bg-color); /* Ensure footer has a background */
+  padding: 2rem;
+  text-align: center; /* Center text in footer */
 }
+
+.footer-social {
+  display: flex;
+  justify-content: center; /* Center the social links */
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.footer-social .social__link {
+  font-size: 1.5rem;
+  transition: color 0.3s ease; /* Add transition for hover effect */
+}
+
+/* Light theme colors */
+[data-theme="light"] .footer-social .social__link {
+  color: var(--text-color); /* Use text color for light theme */
+}
+
+/* Dark theme colors */
+[data-theme="dark"] .footer-social .social__link {
+  color: var(--text-dark); /* Use dark text color for dark theme */
+}
+
+.footer-social .social__link:hover {
+  color: var(--first-color); /* Change color on hover */
+}
+
 .footer__title {
   font-size: 2rem;
   margin-bottom: var(--mb-4);
@@ -708,6 +738,7 @@ header a {
     overflow: hidden;
     box-shadow: var(--card-shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid black; /* Black border for light theme */
 }
 
 .project-card:hover {
@@ -1087,6 +1118,7 @@ body.theme-switching::before {
     background: var(--bg-color);
     border-top: var(--box-border);
     padding: 2rem;
+    color: var(--first-color); /* Same color as section titles in light theme */
 }
 
 .footer__container {
@@ -2348,4 +2380,22 @@ body {
 
 [data-theme="dark"] .footer {
     color: var(--first-color); /* Use the same color as section titles */
+}
+
+/* Social links in footer */
+.footer-social {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.footer-social .social__link {
+    font-size: 1.25rem;
+    color: var(--text-color);
+    transition: color 0.3s ease; /* Add transition for hover effect */
+}
+
+.footer-social .social__link:hover {
+    color: var(--first-color); /* Change color on hover to match header icons */
 }

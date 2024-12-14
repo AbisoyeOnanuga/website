@@ -376,8 +376,6 @@ header a {
   font-weight: var(--font-semi);
   padding: 0.5rem 1rem;
   margin-bottom: var(--mb-4);
-  border-radius: 0.5rem;
-  box-shadow: 0px 4px 25px rgba(14, 36, 49, 0.15);
   width: 200px;
   break-inside: avoid;
 }
@@ -465,8 +463,7 @@ header a {
 /* ===== AWARDS =====*/
 .award__container {
   padding: 2rem;
-  border: 1px solid black; /* Black border for the card */
-  border-radius: 8px; /* Optional: Add some border radius */
+  border: 1px solid black; /* Black border for the card in light theme */
   background: transparent; /* Remove background color */
 }
 
@@ -479,8 +476,18 @@ header a {
   background: transparent; /* Remove background */
   margin-bottom: 1rem; /* Space between items */
   padding: 1rem; /* Padding inside each item */
+  border: 1px solid black; /* All-around border for list items in light theme */
   border-left: 4px solid black; /* Left border for a touch of color */
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .award__container {
+  border: 1px solid white; /* White border for the card in dark theme */
+}
+
+[data-theme="dark"] .award__container li {
+  border: 1px solid white; /* White border for list items in dark theme */
 }
 
 .award__container li:hover {
@@ -2013,191 +2020,199 @@ body {
 }
 
 @media screen and (max-width: 768px) {
-    /* Fix header layout */
-    .l-header {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        background: var(--bg-color);
-        border-bottom: var(--box-border);
-    }
+  /* Fix header layout */
+  .l-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--bg-color);
+    border-bottom: var(--box-border);
+  }
 
-    .header__container {
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        align-items: center;
-        gap: 1rem;
-        padding: 0.5rem;
-        width: 100%;
-        height: var(--header-height);
-    }
+  .header__container {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    width: 100%;
+    height: var(--header-height);
+  }
 
-    /* Logo adjustments */
-    .header__logo {
-        display: flex;
-        align-items: center;
-    }
+  /* Logo adjustments */
+  .header__logo {
+    display: flex;
+    align-items: center;
+  }
 
-    .logo__initials {
-        font-size: 1.2rem;
-    }
+  .logo__initials {
+    font-size: 1.2rem;
+  }
 
-    /* Navigation adjustments */
-    .header__nav {
-        grid-column: 1 / -1;
-        grid-row: 2;
-        display: none;
-    }
+  /* Navigation adjustments */
+  .header__nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: none;
+  }
 
-    .header__nav.show {
-        display: block;
-    }
+  .header__nav.show {
+    display: block;
+  }
 
-    .nav__row {
-        padding: 0.5rem 0;
-    }
+  .nav__row {
+    padding: 0.5rem 0;
+  }
 
-    .nav__list {
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-    }
+  .nav__list {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
 
-    /* Social links */
-    .social__links {
-        display: flex;
-        gap: 1rem;
-    }
+  /* Social links */
+  .social__links {
+    display: flex;
+    gap: 1rem;
+  }
 
-    /* Skills section mobile layout */
-    .skills__container {
-        padding: 1rem;
-    }
+  /* Skills section mobile layout */
+  .skills__container {
+    padding: 1rem;
+  }
 
-    .skills__row {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
+  .skills__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
 
-    .skills__data {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.5rem;
-        background: var(--bg-color);
-        border: 1px solid var(--text-color);
-        width: 100px;
-        height: 50px;
-        transition: background-color 0.3s ease;
-    }
+  .skills__data {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    background: var(--bg-color);
+    border: 1px solid var(--text-color);
+    width: 100px;
+    height: 50px;
+    transition: background-color 0.3s ease;
+  }
 
-    .skills__data:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-    }
+  .skills__data:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
 
-    .skills__icon {
-        font-size: 1.5rem;
-        margin-right: 0.5rem;
-    }
+  .skills__icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+  }
 
-    .skills__name {
-        font-size: 0.85rem;
-        text-align: center;
-    }
+  .skills__name {
+    font-size: 0.85rem;
+    text-align: center;
+  }
 
-    /* Mobile hover/touch interactions */
-    .nav__link,
-    .social__link,
-    .button,
-    .project-card {
-        -webkit-tap-highlight-color: transparent;
-    }
+  /* Mobile hover/touch interactions */
+  .nav__link,
+  .social__link,
+  .button,
+  .project-card {
+    -webkit-tap-highlight-color: transparent;
+  }
 
-    .nav__link:active,
-    .social__link:active,
-    .button:active {
-        transform: scale(0.95);
-    }
+  .nav__link:active,
+  .social__link:active,
+  .button:active {
+    transform: scale(0.95);
+  }
 
-    .project-card:active {
-        transform: translateY(2px);
-    }
+  .project-card:active {
+    transform: translateY(2px);
+  }
 
-    /* Fix border issues */
-    body {
-        border: 8px solid var(--text-color);
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
+  /* Fix border issues */
+  body {
+    border: 8px solid var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-    /* Ensure content stays within border */
-    .l-main {
-        flex: 1;
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-    }
+  /* Ensure content stays within border */
+  .l-main {
+    flex: 1;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
 
-    /* Adjust text wrapping */
-    .about__text,
-    .skills__text,
-    .project-card__info p {
-        word-wrap: break-word;
-        hyphens: auto;
-    }
+  /* Adjust text wrapping */
+  .about__text,
+  .skills__text,
+  .project-card__info p {
+    word-wrap: break-word;
+    hyphens: auto;
+  }
 
-    /* Adjust section spacing */
-    section {
-        padding: 2rem 1rem;
-    }
+  /* Adjust section spacing */
+  section {
+    padding: 2rem 1rem;
+  }
 
-    .section-title {
-        margin-bottom: 1.5rem;
-    }
+  .section-title {
+    margin-bottom: 1.5rem;
+  }
 }
 
 /* Very small screens */
 @media screen and (max-width: 360px) {
-    .header__container {
-        padding: 0.25rem;
-    }
+  .header__container {
+    padding: 0.25rem;
+  }
 
-    .nav__list {
-        gap: 0.5rem;
-    }
+  .nav__list {
+    gap: 0.5rem;
+  }
 
-    .nav__link {
-        font-size: 0.9rem;
-    }
+  .nav__link {
+    font-size: 0.9rem;
+  }
 }
 
 /* Preserve desktop layout */
 @media screen and (min-width: 769px) {
-    .nav__toggle {
-        display: none;
-    }
+  .nav__toggle {
+    display: none;
+  }
 
-    .header__nav {
-        position: static;
-        width: auto;
-        height: auto;
-        background: none;
-        padding: 0;
-        border: none;
-    }
+  .header__nav {
+    position: static;
+    width: auto;
+    height: auto;
+    background: none;
+    padding: 0;
+    border: none;
+  }
 
-    .nav__content {
-        flex-direction: row;
-    }
+  .nav__content {
+    flex-direction: row;
+  }
 
-    .nav__list {
-        flex-direction: row;
-        gap: 2rem;
-    }
+  .nav__list {
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  .skills__data {
+    border: 1px solid var(--text-color);
+  }
+
+  .skills__data:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -2398,4 +2413,21 @@ body {
 
 .footer-social .social__link:hover {
     color: var(--first-color); /* Change color on hover to match header icons */
+}
+
+/* Buttons and Cards */
+.button,
+.project-card,
+.other-section {
+    border-radius: 0; /* Remove border-radius */
+    border: 1px solid var(--text-color); /* Ensure buttons have borders */
+}
+
+/* Ensure all cards have no border-radius */
+.project-card {
+    border: 1px solid black; /* Black border for light theme */
+}
+
+[data-theme="dark"] .project-card {
+    border: 1px solid white; /* White border for dark theme */
 }

@@ -199,6 +199,7 @@ header a {
   margin: 0;
   padding: 0;
   list-style: none;
+  height: 100px;
 }
 
 .nav__link {
@@ -272,7 +273,7 @@ header a {
   border: 1px solid var(--text-color); /* Border around theme toggle */
   background: var(--bg-color); /* Match background with header */
   transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover */
-  height: 48px; /* Match height with logotype */
+  height: 100px; /* Match height with logotype */
 }
 
 .theme-toggle:hover {
@@ -289,7 +290,7 @@ header a {
   padding: 0.5rem;
   border: 1px solid var(--text-color); /* Border around social links */
   background: var(--bg-color); /* Match background with header */
-  height: 48px; /* Match height with theme toggle */
+  height: 100px; /* Match height with theme toggle */
 }
 
 .social__link {
@@ -893,10 +894,6 @@ header a {
 /* Theme toggle and transition styles */
 .theme-toggle {
     position: relative;
-    width: 100%;
-    height: 100%;
-    min-width: 48px;
-    min-height: 48px;
     border: none;
     background: none;
     cursor: pointer;
@@ -1059,21 +1056,6 @@ body::after {
     position: relative;
     overflow: hidden;
     border: var(--box-border);
-}
-
-.theme-toggle {
-    width: 100%;
-    height: 100%;
-    min-width: 48px;
-    min-height: 48px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
 }
 
 /* Show/hide icons based on theme */
@@ -2043,7 +2025,6 @@ body {
   .header__nav {
     position: static;
     width: auto;
-    height: auto;
     background: none;
     padding: 0;
     border: none;

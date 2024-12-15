@@ -244,8 +244,6 @@ header a {
 .header__top {
   display: flex;
   align-items: center;
-  padding: 0.5rem;
-  gap: 0; /* Remove gap to make boxes tight */
   background: var(--bg-color);
   position: relative;
   z-index: 1001;

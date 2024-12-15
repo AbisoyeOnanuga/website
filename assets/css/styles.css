@@ -1078,7 +1078,6 @@ body::after {
 .header__controls {
   position: relative;
   overflow: hidden;
-  border-left: var(--box-border);
 }
 
 /* Show/hide icons based on theme */

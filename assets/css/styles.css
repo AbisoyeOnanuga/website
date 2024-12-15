@@ -208,9 +208,11 @@ a:any-link {
 }
 
 .social__link {
-  font-size: 1.5rem;
-  color: var(--text-color);
-  transition: color 0.3s ease; /* Add transition for hover effect */
+  font-size: 2rem; /* Increase icon size */
+  color: var(--text-color); /* Match text color */
+  transition: color 0.3s ease, background-color 0.3s ease; /* Add transition for hover effect */
+  padding: 0.5rem; /* Add padding for hover area */
+  text-align: center; /* Center the icon */
 }
 
 .footer a {
@@ -309,6 +311,7 @@ a:any-link {
   transition: color var(--transition-medium);
 }
 
+/* Responsive Navigation Styles */
 .nav__list {
   display: flex;
   flex-direction: row; /* Horizontal layout */
@@ -318,6 +321,35 @@ a:any-link {
   justify-content: center;
   border-left: 1px solid var(--text-color); /* Left border */
   border-right: 1px solid var(--text-color); /* Right border */
+}
+
+/* Prevent wrapping at 1024px */
+@media screen and (width <= 1024px) {
+  .nav__list {
+    flex-wrap: nowrap; /* Prevent wrapping */
+  }
+}
+
+/* Adjust for 768px */
+@media screen and (width <= 768px) {
+  .nav__list {
+    flex-direction: column; /* Stack items vertically */
+    display: none; /* Hide by default */
+  }
+
+  .nav__toggle {
+    display: block; /* Show toggle button */
+  }
+
+  .nav__item {
+    display: block; /* Stack items */
+    width: 100%; /* Full width */
+  }
+
+  /* Show only specific items */
+  .nav__item:nth-child(n+4) {
+    display: none; /* Hide items after "Awards" */
+  }
 }
 
 .nav__link {
@@ -397,11 +429,6 @@ a:any-link {
   gap: 0.25rem;
 }
 
-.logo__text {
-  color: var(--text-color);
-  transition: color var(--transition-medium);
-}
-
 /* Navigation Section */
 .header__nav {
   display: flex;
@@ -425,16 +452,6 @@ a:any-link {
   color: white; /* Change text color on hover for light theme */
 }
 
-.nav__link {
-  font-size: 1.25rem; /* Increase text size */
-  color: var(--text-color); /* Match text color */
-  text-decoration: none; /* Remove underline */
-  position: relative;
-  transition: color var(--transition-theme),
-              background-color var(--transition-theme),
-              border-color var(--transition-theme);
-}
-
 .nav__row {
   padding: 0.5rem 1rem;
   display: flex;
@@ -443,11 +460,6 @@ a:any-link {
 
 .nav__row:first-child {
   border-bottom: var(--box-border);
-}
-
-.nav__text {
-  position: relative;
-  padding: 0.25rem 0;
 }
 
 /* Theme Toggle */
@@ -459,9 +471,6 @@ a:any-link {
 
 /* Theme toggle and transition styles */
 .theme-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
   background: none;
   cursor: pointer;
@@ -514,6 +523,7 @@ a:any-link {
   display: flex;
   flex-direction: row; /* Horizontal layout */
   justify-content: center; /* Center items */
+  align-items: center;
   gap: 1rem; /* Space between icons */
   padding: 0.5rem;
   border-right: 1px solid var(--text-color);
@@ -531,15 +541,6 @@ a:any-link {
 .social__link:hover {
   color: var(--first-color); /* Change color on hover */
   background-color: black; /* Add hover background */
-}
-
-.social__link {
-  font-size: 1.5rem; /* Increase icon size */
-  color: var(--text-color); /* Match text color */
-  transition: color 0.3s ease, background-color 0.3s ease; /* Add transition for hover effect */
-  padding: 0.5rem; /* Add padding for hover area */
-  width: 100%; /* Make the link cover the entire box */
-  text-align: center; /* Center the icon */
 }
 
 @keyframes blink {
@@ -980,10 +981,6 @@ a:any-link {
   --text-color: var(--text-dark);
   --second-color: var(--second-dark);
   --accent-color: var(--accent-dark);
-}
-
-/* Dark theme text colors */
-[data-theme="dark"] {
   .award__container,
   .footer {
     color: var(--second-dark);
@@ -1957,45 +1954,6 @@ a-waves {
 .other-section {
   border-radius: 0; /* Remove border-radius */
   border: 1px solid var(--text-color); /* Ensure buttons have borders */
-}
-
-/* Responsive Navigation Styles */
-
-/* General styles for nav__list */
-.nav__list {
-  display: flex;
-  flex-direction: row; /* Horizontal layout */
-  gap: 0; /* Remove gap to make boxes tight */
-  align-items: center; /* Center items vertically */
-}
-
-/* Prevent wrapping at 1024px */
-@media screen and (width <= 1024px) {
-  .nav__list {
-    flex-wrap: nowrap; /* Prevent wrapping */
-  }
-}
-
-/* Adjust for 768px */
-@media screen and (width <= 768px) {
-  .nav__list {
-    flex-direction: column; /* Stack items vertically */
-    display: none; /* Hide by default */
-  }
-
-  .nav__toggle {
-    display: block; /* Show toggle button */
-  }
-
-  .nav__item {
-    display: block; /* Stack items */
-    width: 100%; /* Full width */
-  }
-
-  /* Show only specific items */
-  .nav__item:nth-child(n+4) {
-    display: none; /* Hide items after "Awards" */
-  }
 }
 
 /* Toggle menu for smaller screens */

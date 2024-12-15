@@ -249,7 +249,6 @@ header a {
   background: var(--bg-color);
   position: relative;
   z-index: 1001;
-  border: 1px solid var(--text-color); /* Border around the entire header */
   justify-content: space-between; /* Space between items */
   width: 100%; /* Ensure it takes full width */
 }
@@ -273,7 +272,6 @@ header a {
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
-  border: 1px solid var(--text-color); /* Border around theme toggle */
   background: var(--bg-color); /* Match background with header */
   transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover */
   height: 6rem; /* Match height with logotype */
@@ -292,7 +290,6 @@ header a {
   align-items: center;
   gap: 0; /* Remove gap to make boxes tight */
   padding: 0.5rem;
-  border: 1px solid var(--text-color); /* Border around social links */
   background: var(--bg-color); /* Match background with header */
   height: 6rem; /* Match height with theme toggle */
 }
@@ -322,7 +319,9 @@ header a {
   flex-direction: row; /* Horizontal layout */
   gap: 0; /* Remove gap to make boxes tight */
   align-items: center; /* Center items vertically */
-  border: 1px solid var(--text-color); /* Border around nav list */
+  justify-content: center;
+  border-left: 1px solid var(--text-color); /* Left border */
+  border-right: 1px solid var(--text-color); /* Right border */
 }
 
 .nav__item {
@@ -357,7 +356,7 @@ header a {
   justify-content: center;
   align-items: center;
   padding: 1rem 2.5rem;
-  border-left: 1px solid var(--text-color);
+  border-right: 1px solid var(--text-color);
   background: var(--bg-color);
 }
 
@@ -1027,7 +1026,6 @@ body::after {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-left: 1px solid var(--text-color);
 }
 
 .nav__row {
@@ -2040,12 +2038,10 @@ body {
     width: auto;
     background: none;
     padding: 0;
-    border: none;
   }
 
   .nav__content {
     flex-direction: row;
-    border-left: 1px solid var(--text-color);
   }
 
   .nav__list {

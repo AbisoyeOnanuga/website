@@ -124,6 +124,7 @@ a:any-link {
 }
 
 .home__data {
+  flex: 1;
   align-self: center;
 }
 
@@ -150,13 +151,6 @@ a:any-link {
 
 .home__social-icon:hover {
   color: var(--first-color);
-}
-
-.home__img {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 260px;
 }
 
 .home__blob {
@@ -213,7 +207,7 @@ a:any-link {
   margin-bottom: var(--mb-4);
 }
 
-.footer-social .social__link {
+.social__link {
   font-size: 1.5rem;
   color: var(--text-color);
   transition: color 0.3s ease; /* Add transition for hover effect */
@@ -236,6 +230,16 @@ a:any-link {
 .footer a:active {
   color: #fc0; /* Bright color for active/clicked state */
   text-decoration: none;
+}
+
+/* Light theme colors */
+[data-theme="light"] .footer-social .social__link {
+  color: var(--text-color); /* Use text color for light theme */
+}
+
+/* Dark theme colors */
+[data-theme="dark"] .footer-social .social__link {
+  color: var(--text-dark); /* Use dark text color for dark theme */
 }
 
 /* ===== CLASS CSS ===== */
@@ -310,6 +314,10 @@ a:any-link {
   flex-direction: row; /* Horizontal layout */
   gap: 0; /* Remove gap to make boxes tight */
   align-items: center; /* Center items vertically */
+  height: 6rem;
+  justify-content: center;
+  border-left: 1px solid var(--text-color); /* Left border */
+  border-right: 1px solid var(--text-color); /* Right border */
 }
 
 .nav__link {
@@ -405,18 +413,6 @@ a:any-link {
 }
 
 /* Navigation List */
-.nav__list {
-  display: flex;
-  flex-direction: row; /* Horizontal layout */
-  gap: 0; /* Remove gap to make boxes tight */
-  height: 6rem;
-  align-items: center; /* Center items vertically */
-  justify-content: center;
-  border-left: 1px solid var(--text-color); /* Left border */
-  border-right: 1px solid var(--text-color); /* Right border */
-}
-
-/* Navigation List */
 .nav__item {
   padding: 0.5rem 1rem; /* Increase padding for larger boxes */
   transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover */
@@ -506,7 +502,7 @@ a:any-link {
   color: var(--text-color);
   position: relative;
   z-index: 1;
-  transition: color var(--transition-fast);
+  transition: transform 0.3s ease, opacity 0.15s ease;
 }
 
 .theme-toggle:hover i {
@@ -525,6 +521,13 @@ a:any-link {
   height: 6rem; /* Match height with theme toggle */
 }
 
+/* Ensure social links are horizontal */
+@media screen and (width <= 768px) {
+  .social__links {
+    flex-direction: row; /* Keep horizontal */
+  }
+}
+
 .social__link:hover {
   color: var(--first-color); /* Change color on hover */
   background-color: black; /* Add hover background */
@@ -537,14 +540,6 @@ a:any-link {
   padding: 0.5rem; /* Add padding for hover area */
   width: 100%; /* Make the link cover the entire box */
   text-align: center; /* Center the icon */
-}
-
-.typing-container {
-  color: var(--first-color);
-  border-right: 2px solid;
-  white-space: normal;
-  overflow: hidden;
-  margin-left: 13px;
 }
 
 @keyframes blink {
@@ -563,10 +558,13 @@ a:any-link {
 /* BUTTONS */
 .button {
   display: inline-block;
-  background-color: var(--first-color);
-  color: #fff;
+  background: transparent;
+  color: var(--text-color);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
   padding: 0.75rem 2.5rem;
-  font-weight: var(--font-semi);
   border-radius: 0.5rem;
   transition: color var(--transition-theme),
               background-color var(--transition-theme),
@@ -798,16 +796,6 @@ a:any-link {
   margin-left: auto;
 }
 
-/* Light theme colors */
-[data-theme="light"] .footer-social .social__link {
-  color: var(--text-color); /* Use text color for light theme */
-}
-
-/* Dark theme colors */
-[data-theme="dark"] .footer-social .social__link {
-  color: var(--text-dark); /* Use dark text color for dark theme */
-}
-
 /* ===== MEDIA QUERIES===== */
 
 /* Hover effect for non-touch devices with a width of 600px and above */
@@ -994,6 +982,18 @@ a:any-link {
   --accent-color: var(--accent-dark);
 }
 
+/* Dark theme text colors */
+[data-theme="dark"] {
+  .award__container,
+  .footer {
+    color: var(--second-dark);
+  }
+  
+  .section-title {
+    color: var(--accent-dark);
+  }
+}
+
 [data-theme="light"] {
   --bg-color: var(--bg-light);
   --text-color: var(--text-light);
@@ -1011,7 +1011,6 @@ a:any-link {
 
 .project-card {
   background: var(--card-bg);
-  border-radius: 15px;
   overflow: hidden;
   box-shadow: var(--card-shadow);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -1209,30 +1208,6 @@ body.theme-switching::before {
   color: var(--bg-color);
 }
 
-/* Dark theme text colors */
-[data-theme="dark"] {
-  .award__container,
-  .footer {
-    color: var(--second-dark);
-  }
-  
-  .section-title {
-    color: var(--accent-dark);
-  }
-}
-
-/* Updated button style */
-.button {
-  display: inline-block;
-  padding: 1rem 2rem;
-  background: transparent;
-  color: var(--text-color);
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 600;
-}
-
 /* Update main content container */
 .l-main {
   max-width: 1400px;
@@ -1317,18 +1292,15 @@ body.theme-switching::before {
   display: flex;
   gap: 0.5rem;
   font-size: var(--large-font-size);
+  font-weight: bold;
   color: var(--text-color);
+  max-width: 1400px;
+  margin: 0 auto;
+  justify-content: center;  /* Center the typing text */
 }
 
 .typing-prefix {
-    white-space: nowrap;
-}
-
-.typing-container {
-  color: var(--first-color);
-  border-right: 3px solid;
-  padding-right: 4px;
-  animation: blink 0.75s step-end infinite;
+  white-space: nowrap;
 }
 
 @media screen and (width <= 768px) {
@@ -1352,14 +1324,14 @@ body.theme-switching::before {
   padding-top: 2rem;
 }
 
-.home__data {
-  flex: 1;
-}
-
 .home__img {
   flex: 1;
   display: flex;
+  position: absolute;
   justify-content: center;
+  right: 0;
+  bottom: 0;
+  width: 260px;
 }
 
 .typing-container-wrapper {
@@ -1374,15 +1346,6 @@ body.theme-switching::before {
   right: 50%;
   transform: translateX(-50%);
   z-index: -1;
-}
-
-.typing-wrapper {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;  /* Center the typing text */
-  color: var(--text-color);
-  font-weight: bold;
 }
 
 .typing-container {
@@ -1503,7 +1466,18 @@ body.theme-switching::before {
   z-index: 1;
 }
 
-.about-section, .skills-section {
+.about-section,
+.skills-section {
+  position: relative;
+  z-index: 2;
+  background: var(--bg-color);
+  padding: 3rem;
+  margin: 2rem auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 30px rgb(0 0 0 / 10%);
+  transform-style: preserve-3d;
+  transform: translateZ(50px);
+  max-width: 900px;
   min-height: 80vh;
   display: flex;
   flex-direction: column;
@@ -1577,20 +1551,6 @@ a-waves {
   transform-style: preserve-3d;
 }
 
-.about-section,
-.skills-section {
-  position: relative;
-  z-index: 2;
-  background: var(--bg-color);
-  padding: 3rem;
-  margin: 2rem auto;
-  border-radius: 0.5rem;
-  box-shadow: 0 0 30px rgb(0 0 0 / 10%);
-  transform-style: preserve-3d;
-  transform: translateZ(50px);
-  max-width: 900px;
-}
-
 .wave-svg {
   position: absolute;
   top: 0;
@@ -1613,9 +1573,6 @@ a-waves {
 }
 
 /* Theme transition styles */
-body {
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
 
 /* Ensure all color transitions are smooth */
 *,
@@ -1627,32 +1584,9 @@ body {
               box-shadow 0.3s ease;
 }
 
-/* Theme toggle icon transition */
-.theme-toggle i {
-  transition: transform 0.3s ease, opacity 0.15s ease;
-}
-
-/* Remove any existing theme transition styles */
-.theme-transition-bar,
-.theme-mask,
-body::after {
-  display: none;
-}
-
-/* Remove all slow transitions */
-.theme-transition-bar,
-.theme-mask,
-body::after {
-  display: none;
-}
-
 /* Only keep fast transitions for color changes */
 [data-theme] {
   transition: none;
-}
-
-body {
-  transition: background-color var(--transition-fast);
 }
 
 * {
@@ -1762,12 +1696,16 @@ body {
 
   /* Typing container adjustments */
   .typing-container-wrapper {
-    padding: 0.5rem;
-    margin: 1rem -0.5rem;
+    margin: 0;
+    padding: 1rem 0;
+    width: 100%;
+    transform: none;
+    left: 0;
   }
 
   .typing-wrapper {
-    font-size: calc(var(--normal-font-size) * 1.2);
+    font-size: 1.5rem;
+    padding: 0 1rem;
   }
 
   /* Box container adjustments */
@@ -1896,20 +1834,6 @@ body {
     text-align: center;
   }
 
-  /* Typing container fixes */
-  .typing-container-wrapper {
-    width: 100%;
-    margin: 0;
-    padding: 1rem 0;
-    transform: none;
-    left: 0;
-  }
-
-  .typing-wrapper {
-    font-size: 1.5rem;
-    padding: 0 1rem;
-  }
-
   /* Box container fixes */
   .box-container {
     padding: 1rem;
@@ -2035,15 +1959,6 @@ body {
   border: 1px solid var(--text-color); /* Ensure buttons have borders */
 }
 
-/* Ensure all cards have no border-radius */
-.project-card {
-  border: 1px solid black; /* Black border for light theme */
-}
-
-[data-theme="dark"] .project-card {
-  border: 1px solid white; /* White border for dark theme */
-}
-
 /* Responsive Navigation Styles */
 
 /* General styles for nav__list */
@@ -2128,23 +2043,5 @@ body {
   .nav__item {
     display: block; /* Stack items */
     width: 100%; /* Full width */
-  }
-}
-
-/* Social Links */
-.social__links {
-  display: flex;
-  flex-direction: column; /* Horizontal layout */
-  justify-content: center; /* Center items */
-  gap: 1rem; /* Space between icons */
-  padding: 0.5rem;
-  background: var(--bg-color); /* Match background with header */
-  height: 6rem; /* Match height with theme toggle */
-}
-
-/* Ensure social links are horizontal */
-@media screen and (width <= 768px) {
-  .social__links {
-    flex-direction: row; /* Keep horizontal */
   }
 }

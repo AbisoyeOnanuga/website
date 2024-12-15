@@ -194,11 +194,9 @@ header a {
 
 .nav__list {
   display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  list-style: none;
-  height: 6rem;
-  align-items: center;
+  flex-direction: row; /* Horizontal layout */
+  gap: 0; /* Remove gap to make boxes tight */
+  align-items: center; /* Center items vertically */
 }
 
 .nav__link {
@@ -283,10 +281,9 @@ header a {
 /* Social Links */
 .social__links {
   display: flex;
-  flex-direction: column; /* Stack icons vertically */
-  justify-content: center;
-  align-items: center;
-  gap: 0; /* Remove gap to make boxes tight */
+  flex-direction: row; /* Horizontal layout */
+  justify-content: center; /* Center items */
+  gap: 1rem; /* Space between icons */
   padding: 0.5rem;
   background: var(--bg-color); /* Match background with header */
   height: 6rem; /* Match height with theme toggle */
@@ -310,12 +307,14 @@ header a {
 .header__nav {
   padding: 0.5rem; /* Padding inside nav */
   flex-grow: 1; /* Allow nav to take up remaining space */
+  height: 6rem;
 }
 
 .nav__list {
   display: flex;
   flex-direction: row; /* Horizontal layout */
   gap: 0; /* Remove gap to make boxes tight */
+  height: 6rem;
   align-items: center; /* Center items vertically */
   justify-content: center;
   border-left: 1px solid var(--text-color); /* Left border */
@@ -340,22 +339,16 @@ header a {
   color: white; /* Change text color on hover for light theme */
 }
 
-/* Remove border-radius from nav and icon boxes */
-.header__nav,
-.social__links,
-.theme-toggle {
-  border-radius: 0; /* No border-radius */
-}
-
 /* Social Links */
 .social__links {
   display: flex;
-  flex-direction: column; /* Stack icons vertically */
-  justify-content: center;
-  align-items: center;
-  padding: 1rem 2.5rem;
+  flex-direction: row; /* Horizontal layout */
+  justify-content: center; /* Center items */
+  gap: 1rem; /* Space between icons */
+  padding: 0.5rem;
   border-right: 1px solid var(--text-color);
-  background: var(--bg-color);
+  background: var(--bg-color); /* Match background with header */
+  height: 6rem; /* Match height with theme toggle */
 }
 
 .social__link:hover {
@@ -1722,7 +1715,6 @@ body {
     top: var(--header-height);
     left: 0;
     width: 100%;
-    background: var(--bg-color);
     padding: 1rem;
     transform: translateY(-100%);
     transition: transform 0.3s ease;
@@ -2088,4 +2080,109 @@ body {
 
 [data-theme="dark"] .project-card {
   border: 1px solid white; /* White border for dark theme */
+}
+
+/* Responsive Navigation Styles */
+
+/* General styles for nav__list */
+.nav__list {
+    display: flex;
+    flex-direction: row; /* Horizontal layout */
+    gap: 0; /* Remove gap to make boxes tight */
+    align-items: center; /* Center items vertically */
+}
+
+/* Prevent wrapping at 1024px */
+@media screen and (max-width: 1024px) {
+    .nav__list {
+        flex-wrap: nowrap; /* Prevent wrapping */
+    }
+}
+
+/* Adjust for 768px */
+@media screen and (max-width: 768px) {
+    .nav__list {
+        flex-direction: column; /* Stack items vertically */
+        display: none; /* Hide by default */
+    }
+
+    .nav__toggle {
+        display: block; /* Show toggle button */
+    }
+
+    .nav__item {
+        display: block; /* Stack items */
+        width: 100%; /* Full width */
+    }
+
+    /* Show only specific items */
+    .nav__item:nth-child(n+4) {
+        display: none; /* Hide items after "Awards" */
+    }
+}
+
+/* Toggle menu for smaller screens */
+@media screen and (max-width: 425px) {
+    .nav__list {
+        display: none; /* Hide by default */
+    }
+
+    .nav__toggle {
+        display: block; /* Show toggle button */
+    }
+
+    .nav__item {
+        display: block; /* Stack items */
+        width: 100%; /* Full width */
+    }
+}
+
+/* For 375px and below */
+@media screen and (max-width: 375px) {
+    .nav__list {
+        display: none; /* Hide by default */
+    }
+
+    .nav__toggle {
+        display: block; /* Show toggle button */
+    }
+
+    .nav__item {
+        display: block; /* Stack items */
+        width: 100%; /* Full width */
+    }
+}
+
+/* For 320px and below */
+@media screen and (max-width: 320px) {
+    .nav__list {
+        display: none; /* Hide by default */
+    }
+
+    .nav__toggle {
+        display: block; /* Show toggle button */
+    }
+
+    .nav__item {
+        display: block; /* Stack items */
+        width: 100%; /* Full width */
+    }
+}
+
+/* Social Links */
+.social__links {
+    display: flex;
+    flex-direction: column; /* Horizontal layout */
+    justify-content: center; /* Center items */
+    gap: 1rem; /* Space between icons */
+    padding: 0.5rem;
+    background: var(--bg-color); /* Match background with header */
+    height: 6rem; /* Match height with theme toggle */
+}
+
+/* Ensure social links are horizontal */
+@media screen and (max-width: 768px) {
+    .social__links {
+        flex-direction: row; /* Keep horizontal */
+    }
 }

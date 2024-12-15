@@ -106,16 +106,117 @@ img {
 
 /* ===== Links ====== */
 
-a:any-link {
-  text-decoration: none;
-}
-
 header a {
   text-decoration: none;
 }
 
+a:any-link {
+  text-decoration: none;
+}
+
+/* ===== HOME ===== */
+
 .home {
   text-decoration: none;
+  position: relative;
+  row-gap: 5rem;
+  padding: 4rem 0 5rem;
+}
+
+.home__data {
+  align-self: center;
+}
+
+.home__title {
+  font-size: var(--big-font-size);
+  margin-bottom: var(--mb-5);
+}
+
+.home__title-color {
+  color: var(--first-color);
+}
+
+.home__social {
+  display: flex;
+  flex-direction: column;
+}
+
+.home__social-icon {
+  width: max-content;
+  margin-bottom: var(--mb-2);
+  font-size: 1.5rem;
+  color: var(--second-color);
+}
+
+.home__social-icon:hover {
+  color: var(--first-color);
+}
+
+.home__img {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 260px;
+}
+
+.home__blob {
+  fill: var(--first-color);
+}
+
+.home__blob-img {
+  width: 360px;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  background: var(--bg-color); /* Ensure footer has a background */
+  border-top: var(--box-border);
+  color: var(--first-color); /* Same color as section titles in light theme */
+  padding: 2rem;
+  text-align: center; /* Center text in footer */
+}
+
+.footer__container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.footer__section {
+  border: var(--box-border);
+  padding: 1rem;
+}
+
+.footer__title {
+  font-size: 2rem;
+  margin-bottom: var(--mb-4);
+}
+
+.footer__icon {
+  font-size: 1.5rem;
+  color: #fff;
+  margin: 0 var(--mb-2);
+}
+
+.footer__copy {
+  font-size: var(--smaller-font-size);
+}
+
+/* Social links in footer */
+.footer-social {
+  display: flex;
+  justify-content: center; /* Center the social links */
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-bottom: var(--mb-4);
+}
+
+.footer-social .social__link {
+  font-size: 1.5rem;
+  color: var(--text-color);
+  transition: color 0.3s ease; /* Add transition for hover effect */
 }
 
 .footer a {
@@ -212,6 +313,7 @@ header a {
 }
 
 .nav__link {
+  font-size: 1.25rem; /* Increase text size */
   position: relative;
   display: inline-block;
   color: var(--text-color);
@@ -263,65 +365,46 @@ header a {
 
 /* Logotype */
 .header__logo {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  transition: all var(--transition-medium);
   width: 6rem; /* Set width */
   height: 6rem; /* Set height */
-  display: flex;
-  align-items: center;
   justify-content: center;
 }
 
-/* Theme Toggle */
-.header__controls {
-  margin-left: auto; /* Push controls to the right */
-}
-
+/* Ensure logotype and theme toggle are square */
+.header__logo,
 .theme-toggle {
+  width: 6rem; /* Set width */
+  height: 6rem; /* Set height */
+}
+
+/* Logo Section */
+.logo__initials {
+  font-size: 2rem;
+  font-weight: 700;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem;
-  background: var(--bg-color); /* Match background with header */
-  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover */
-  height: 6rem; /* Match height with logotype */
+  gap: 0.25rem;
 }
 
-.theme-toggle:hover {
-  background-color: rgb(0 0 0 / 10%); /* Hover effect */
-  transform: scale(1.05); /* Slightly enlarge on hover */
+.logo__text {
+  color: var(--text-color);
+  transition: color var(--transition-medium);
 }
 
-/* Social Links */
-.social__links {
-  display: flex;
-  flex-direction: row; /* Horizontal layout */
-  justify-content: center; /* Center items */
-  gap: 1rem; /* Space between icons */
-  padding: 0.5rem;
-  background: var(--bg-color); /* Match background with header */
-  height: 6rem; /* Match height with theme toggle */
-}
-
-.social__link {
-  font-size: 1.5rem; /* Increase icon size */
-  color: var(--text-color); /* Match text color */
-  transition: color 0.3s ease, background-color 0.3s ease; /* Add transition for hover effect */
-  padding: 0.5rem; /* Add padding for hover area */
-  width: 100%; /* Make the link cover the entire box */
-  text-align: center; /* Center the icon */
-}
-
-.social__link:hover {
-  color: var(--first-color); /* Change color on hover */
-  background-color: black; /* Add hover background */
-}
-
-/* Navigation List */
+/* Navigation Section */
 .header__nav {
-  padding: 0.5rem; /* Padding inside nav */
+  display: flex;
+  flex-direction: column;
   flex-grow: 1; /* Allow nav to take up remaining space */
+  justify-content: center;
+  padding: 0.5rem; /* Padding inside nav */
   height: 6rem;
 }
 
+/* Navigation List */
 .nav__list {
   display: flex;
   flex-direction: row; /* Horizontal layout */
@@ -333,15 +416,10 @@ header a {
   border-right: 1px solid var(--text-color); /* Right border */
 }
 
+/* Navigation List */
 .nav__item {
   padding: 0.5rem 1rem; /* Increase padding for larger boxes */
   transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover */
-}
-
-.nav__link {
-  font-size: 1.25rem; /* Increase text size */
-  color: var(--text-color); /* Match text color */
-  text-decoration: none; /* Remove underline */
 }
 
 /* Hover effect for nav items */
@@ -349,6 +427,90 @@ header a {
   background-color: black; /* Change background on hover */
   transform: scale(1.05); /* Slightly enlarge on hover */
   color: white; /* Change text color on hover for light theme */
+}
+
+.nav__link {
+  font-size: 1.25rem; /* Increase text size */
+  color: var(--text-color); /* Match text color */
+  text-decoration: none; /* Remove underline */
+  position: relative;
+  transition: color var(--transition-theme),
+              background-color var(--transition-theme),
+              border-color var(--transition-theme);
+}
+
+.nav__row {
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.nav__row:first-child {
+  border-bottom: var(--box-border);
+}
+
+.nav__text {
+  position: relative;
+  padding: 0.25rem 0;
+}
+
+/* Theme Toggle */
+.header__controls {
+  position: relative;
+  overflow: hidden;
+  margin-left: auto; /* Push controls to the right */
+}
+
+/* Theme toggle and transition styles */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: none;
+  cursor: pointer;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover */
+  height: 6rem; /* Match height with logotype */
+}
+
+.theme-toggle:hover {
+  background-color: rgb(0 0 0 / 10%); /* Hover effect */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Use the same transition style as hover effects */
+.theme-toggle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background: var(--text-color);
+  transition: height var(--transition-fast);
+  z-index: 0;
+}
+
+.theme-toggle:hover::before {
+  height: 100%;
+}
+
+/* Icon styles */
+.theme-toggle i {
+  font-size: 1.5rem;
+  color: var(--text-color);
+  position: relative;
+  z-index: 1;
+  transition: color var(--transition-fast);
+}
+
+.theme-toggle:hover i {
+  color: var(--bg-color);
 }
 
 /* Social Links */
@@ -368,46 +530,13 @@ header a {
   background-color: black; /* Add hover background */
 }
 
-/* Navigation List */
-.nav__item {
-  padding: 0.5rem 1rem; /* Increase padding for larger boxes */
-  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover */
-}
-
-.nav__link {
-  font-size: 1.25rem; /* Increase text size */
+.social__link {
+  font-size: 1.5rem; /* Increase icon size */
   color: var(--text-color); /* Match text color */
-  text-decoration: none; /* Remove underline */
-}
-
-/* Hover effect for nav items */
-.nav__item:hover {
-  background-color: black; /* Change background on hover */
-  transform: scale(1.05); /* Slightly enlarge on hover */
-  color: white; /* Change text color on hover for light theme */
-}
-
-/* Ensure logotype and theme toggle are square */
-.header__logo,
-.theme-toggle {
-  width: 6rem; /* Set width */
-  height: 6rem; /* Set height */
-}
-
-/* ===== HOME ===== */
-.home {
-  position: relative;
-  row-gap: 5rem;
-  padding: 4rem 0 5rem;
-}
-
-.home__data {
-  align-self: center;
-}
-
-.home__title {
-  font-size: var(--big-font-size);
-  margin-bottom: var(--mb-5);
+  transition: color 0.3s ease, background-color 0.3s ease; /* Add transition for hover effect */
+  padding: 0.5rem; /* Add padding for hover area */
+  width: 100%; /* Make the link cover the entire box */
+  text-align: center; /* Center the icon */
 }
 
 .typing-container {
@@ -429,41 +558,6 @@ header a {
 } */
 @keyframes blink {
   50% { opacity: 0; }
-}
-
-.home__title-color {
-  color: var(--first-color);
-}
-
-.home__social {
-  display: flex;
-  flex-direction: column;
-}
-
-.home__social-icon {
-  width: max-content;
-  margin-bottom: var(--mb-2);
-  font-size: 1.5rem;
-  color: var(--second-color);
-}
-
-.home__social-icon:hover {
-  color: var(--first-color);
-}
-
-.home__img {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 260px;
-}
-
-.home__blob {
-  fill: var(--first-color);
-}
-
-.home__blob-img {
-  width: 360px;
 }
 
 /* BUTTONS */
@@ -683,11 +777,6 @@ header a {
   box-shadow: 0 2px 5px rgb(0 0 0 / 10%); /* Soft shadow for depth */
 }
 
-.section-title {
-  text-align: center; /* Center align the section title */
-  margin-bottom: 2rem; /* Space after the title */
-}
-
 /* ===== CONTACT ===== */
 .contact__input {
   width: 100%;
@@ -709,25 +798,6 @@ header a {
   margin-left: auto;
 }
 
-/* ===== FOOTER ===== */
-.footer {
-  background: var(--bg-color); /* Ensure footer has a background */
-  padding: 2rem;
-  text-align: center; /* Center text in footer */
-}
-
-.footer-social {
-  display: flex;
-  justify-content: center; /* Center the social links */
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.footer-social .social__link {
-  font-size: 1.5rem;
-  transition: color 0.3s ease; /* Add transition for hover effect */
-}
-
 /* Light theme colors */
 [data-theme="light"] .footer-social .social__link {
   color: var(--text-color); /* Use text color for light theme */
@@ -736,25 +806,6 @@ header a {
 /* Dark theme colors */
 [data-theme="dark"] .footer-social .social__link {
   color: var(--text-dark); /* Use dark text color for dark theme */
-}
-
-.footer__title {
-  font-size: 2rem;
-  margin-bottom: var(--mb-4);
-}
-
-.footer__social {
-  margin-bottom: var(--mb-4);
-}
-
-.footer__icon {
-  font-size: 1.5rem;
-  color: #fff;
-  margin: 0 var(--mb-2);
-}
-
-.footer__copy {
-  font-size: var(--smaller-font-size);
 }
 
 /* ===== MEDIA QUERIES===== */
@@ -1009,47 +1060,6 @@ header a {
   opacity: 0.9;
 }
 
-/* Theme toggle and transition styles */
-.theme-toggle {
-  position: relative;
-  background: none;
-  cursor: pointer;
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-/* Use the same transition style as hover effects */
-.theme-toggle::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 0;
-  background: var(--text-color);
-  transition: height var(--transition-fast);
-  z-index: 0;
-}
-
-.theme-toggle:hover::before {
-  height: 100%;
-}
-
-.theme-toggle i {
-  font-size: 1.5rem;
-  color: var(--text-color);
-  position: relative;
-  z-index: 1;
-  transition: color var(--transition-fast);
-}
-
-.theme-toggle:hover i {
-  color: var(--bg-color);
-}
-
 /* Fast theme transitions */
 :root[data-theme] {
   transition: none;
@@ -1077,85 +1087,6 @@ body::after {
   justify-content: center;
 }
 
-/* Logo Section */
-.header__logo {
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  transition: all var(--transition-medium);
-}
-
-.logo__initials {
-  font-size: 2rem;
-  font-weight: 700;
-  display: flex;
-  gap: 0.25rem;
-}
-
-.logo__text {
-  color: var(--text-color);
-  transition: color var(--transition-medium);
-}
-
-/* Navigation Section */
-.header__nav {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.nav__row {
-  padding: 0.5rem 1rem;
-  display: flex;
-  align-items: center;
-}
-
-.nav__row:first-child {
-  border-bottom: var(--box-border);
-}
-
-.nav__list {
-  display: flex;
-  gap: 2rem;
-}
-
-.nav__link {
-  position: relative;
-  color: var(--text-color);
-  transition: color var(--transition-theme),
-              background-color var(--transition-theme),
-              border-color var(--transition-theme);
-}
-
-.nav__text {
-  position: relative;
-  padding: 0.25rem 0;
-}
-
-.nav__text::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--accent-color);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform var(--transition-medium);
-}
-
-.nav__link:hover .nav__text::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-/* Theme Toggle */
-.header__controls {
-  position: relative;
-  overflow: hidden;
-}
-
 /* Show/hide icons based on theme */
 [data-theme="light"] .bxs-sun {
   display: block !important;
@@ -1171,11 +1102,6 @@ body::after {
 
 [data-theme="dark"] .bxs-moon {
   display: block !important;
-}
-
-.theme-toggle i {
-  font-size: 1.5rem;
-  color: var(--text-color);
 }
 
 /* Theme transition overlay */
@@ -1203,22 +1129,10 @@ body.theme-switching::before {
   transition: none !important;
 }
 
-/* Icon styles */
-.theme-toggle i {
-  font-size: 1.5rem;
-  color: var(--text-color);
-  position: relative;
-  z-index: 1;
-}
-
 /* Hover Effects */
 .header__logo:hover,
 .theme-toggle__box:hover {
   background: var(--text-color);
-}
-
-.header__logo:hover .logo__text {
-  color: var(--bg-color);
 }
 
 .theme-toggle__box:hover .theme-toggle__icon {
@@ -1293,27 +1207,6 @@ body.theme-switching::before {
 .header__logo:hover .logo__text,
 .theme-toggle__box:hover .theme-toggle__icon {
   color: var(--bg-color);
-}
-
-/* Updated footer style */
-.footer {
-  background: var(--bg-color);
-  border-top: var(--box-border);
-  padding: 2rem;
-  color: var(--first-color); /* Same color as section titles in light theme */
-}
-
-.footer__container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.footer__section {
-  border: var(--box-border);
-  padding: 1rem;
 }
 
 /* Dark theme text colors */
@@ -1822,8 +1715,17 @@ body {
   }
 
   .header__controls {
-      flex: 0 0 auto;
-      margin-left: auto;
+    flex: 0 0 auto;
+    margin-left: auto;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  /* Theme toggle */
+  .theme-toggle {
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0.5rem;
   }
 
   /* Add hamburger menu for mobile */
@@ -1925,18 +1827,6 @@ body {
   /* Ripple effect */
   .ripple-container {
     height: 150px;
-  }
-
-  /* Theme toggle */
-  .header__controls {
-    min-width: 40px;
-    min-height: 40px;
-  }
-
-  .theme-toggle {
-    min-width: 40px;
-    min-height: 40px;
-    padding: 0.5rem;
   }
 }
 
@@ -2135,20 +2025,6 @@ body {
 
 [data-theme="dark"] .footer {
   color: var(--first-color); /* Use the same color as section titles */
-}
-
-/* Social links in footer */
-.footer-social {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.footer-social .social__link {
-  font-size: 1.5rem;
-  color: var(--text-color);
-  transition: color 0.3s ease; /* Add transition for hover effect */
 }
 
 /* Buttons and Cards */

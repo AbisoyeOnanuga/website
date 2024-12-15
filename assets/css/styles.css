@@ -243,20 +243,29 @@ header a {
 /* Header Layout */
 .header__top {
   display: flex;
-  flex-direction: row;
-  align-items: stretch;
+  align-items: center;
+  padding: 0.5rem;
+  gap: 0; /* Remove gap to make boxes tight */
   background: var(--bg-color);
   position: relative;
-  z-index: 5;
-  justify-content: center; /* Center the entire header */
-  height: 6rem;
+  z-index: 1001;
+  border: 1px solid var(--text-color); /* Border around the entire header */
+  justify-content: space-between; /* Space between items */
+  width: 100%; /* Ensure it takes full width */
 }
 
 /* Logotype */
 .header__logo {
+  width: 6rem; /* Set width */
+  height: 6rem; /* Set height */
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Theme Toggle */
+.header__controls {
+  margin-left: auto; /* Push controls to the right */
 }
 
 .theme-toggle {
@@ -264,14 +273,81 @@ header a {
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
+  border: 1px solid var(--text-color); /* Border around theme toggle */
   background: var(--bg-color); /* Match background with header */
   transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover */
-  height: 100px; /* Match height with logotype */
+  height: 6rem; /* Match height with logotype */
 }
 
 .theme-toggle:hover {
   background-color: rgba(0, 0, 0, 0.1); /* Hover effect */
   transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Social Links */
+.social__links {
+  display: flex;
+  flex-direction: column; /* Stack icons vertically */
+  justify-content: center;
+  align-items: center;
+  gap: 0; /* Remove gap to make boxes tight */
+  padding: 0.5rem;
+  border: 1px solid var(--text-color); /* Border around social links */
+  background: var(--bg-color); /* Match background with header */
+  height: 6rem; /* Match height with theme toggle */
+}
+
+.social__link {
+  font-size: 1.5rem; /* Increase icon size */
+  color: var(--text-color); /* Match text color */
+  transition: color 0.3s ease, background-color 0.3s ease; /* Add transition for hover effect */
+  padding: 0.5rem; /* Add padding for hover area */
+  width: 100%; /* Make the link cover the entire box */
+  text-align: center; /* Center the icon */
+}
+
+.social__link:hover {
+  color: var(--first-color); /* Change color on hover */
+  background-color: black; /* Add hover background */
+}
+
+/* Navigation List */
+.header__nav {
+  padding: 0.5rem; /* Padding inside nav */
+  flex-grow: 1; /* Allow nav to take up remaining space */
+}
+
+.nav__list {
+  display: flex;
+  flex-direction: row; /* Horizontal layout */
+  gap: 0; /* Remove gap to make boxes tight */
+  align-items: center; /* Center items vertically */
+  border: 1px solid var(--text-color); /* Border around nav list */
+}
+
+.nav__item {
+  padding: 0.5rem 1rem; /* Increase padding for larger boxes */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover */
+}
+
+.nav__link {
+  font-size: 1.25rem; /* Increase text size */
+  color: var(--text-color); /* Match text color */
+  text-decoration: none; /* Remove underline */
+}
+
+/* Hover effect for nav items */
+.nav__item:hover {
+  background-color: black; /* Change background on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+  color: white; /* Change text color on hover for light theme */
+}
+
+/* Remove border-radius from nav and icon boxes */
+.header__nav,
+.social__links,
+.theme-toggle {
+  border-radius: 0; /* No border-radius */
 }
 
 /* Social Links */
@@ -1004,7 +1080,7 @@ body::after {
 .header__controls {
   position: relative;
   overflow: hidden;
-  border: var(--box-border);
+  border-left: var(--box-border);
 }
 
 /* Show/hide icons based on theme */
@@ -1183,7 +1259,6 @@ body.theme-switching::before {
 .button {
   display: inline-block;
   padding: 1rem 2rem;
-  border: var(--box-border);
   background: transparent;
   color: var(--text-color);
   text-decoration: none;

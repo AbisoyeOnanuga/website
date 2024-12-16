@@ -1238,7 +1238,7 @@ body.theme-switching::before {
   z-index: 1;  /* Ensure it's above other elements */
 }
 
-#particleCanvas {
+#particle-canvas {
   width: 100%;
   height: 100%;
   display: block;
@@ -1369,7 +1369,7 @@ body.theme-switching::before {
   overflow: hidden;
 }
 
-#rippleCanvas {
+#ripple-canvas {
   position: absolute;
   top: 0;
   left: 0;

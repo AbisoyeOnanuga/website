@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize particle portrait
     const initParticlePortrait = () => {
-        const particleCanvas = document.getElementById('particleCanvas');
+        const particleCanvas = document.getElementById('particle-canvas');
         if (particleCanvas) {
             new ParticlePortrait();
         }
@@ -171,7 +171,7 @@ themeToggle.addEventListener('click', toggleTheme);
 
 class ParticlePortrait {
     constructor() {
-        this.canvas = document.getElementById('particleCanvas');
+        this.canvas = document.getElementById('particle-canvas');
         this.ctx = this.canvas.getContext('2d');
         this.particles = [];
         this.mouse = { x: 0, y: 0 };
@@ -293,7 +293,7 @@ class ParticlePortrait {
 
 class RippleEffect {
     constructor() {
-        this.canvas = document.getElementById('rippleCanvas');
+        this.canvas = document.getElementById('ripple-canvas');
         this.ctx = this.canvas.getContext('2d');
         
         this.canvas.width = this.canvas.offsetWidth;
@@ -472,7 +472,7 @@ class RippleEffect {
 
 // Initialize only once when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    const rippleCanvas = document.getElementById('rippleCanvas');
+    const rippleCanvas = document.getElementById('ripple-canvas');
     if (rippleCanvas) {
         const rippleEffect = new RippleEffect();
     }

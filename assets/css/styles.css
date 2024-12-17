@@ -655,7 +655,6 @@ a:any-link {
 
 .about__img {
   justify-self: center;
-  margin-right: 1rem;
 }
 
 .about__img img {
@@ -2133,6 +2132,7 @@ a-waves {
   .about__img {
     max-width: 50%; /* Adjust image width for larger screens */
     margin-bottom: 0; /* Remove bottom margin */
+    margin-right: 1rem;
   }
 
   .about__text {

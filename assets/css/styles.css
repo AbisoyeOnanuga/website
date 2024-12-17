@@ -62,7 +62,7 @@
   :root {
     --big-font-size: 3.5rem;
     --h2-font-size: 2rem;
-    --normal-font-size: 1.1rem;
+    --normal-font-size: 1.5rem;
     --smaller-font-size: 0.9rem;
   }
 }
@@ -636,7 +636,13 @@ a:any-link {
 }
 
 .about__subtitle {
-  margin-bottom: var(--mb-2);
+  font-size: var(--h2-font-size); /* Adjust font size for smaller screens */
+  margin-bottom: var(--mb-2); /* Space below subtitle */
+}
+
+.about__text {
+  font-size: var(--normal-font-size); /* Adjust font size for smaller screens */
+  padding: var(--mb-2); /* Add horizontal padding for text */
 }
 
 .nowrap {
@@ -883,6 +889,16 @@ a:any-link {
 
   .home__img {
     width: 460px;
+  }
+
+  .about__subtitle {
+    font-size: var(--h2-font-size); /* Adjust font size for smaller screens */
+    margin-bottom: 0.5rem; /* Space below subtitle */
+  }
+
+  .about__text {
+    font-size: var(--normal-font-size); /* Adjust font size for smaller screens */
+    padding: 0 1rem; /* Add horizontal padding for text */
   }
 }
 
@@ -1933,6 +1949,16 @@ a-waves {
   .footer__social {
     justify-content: center;
   }
+
+  .about__subtitle {
+    font-size: var(--h2-font-size); /* Adjust font size for smaller screens */
+    margin-bottom: 0.5rem; /* Space below subtitle */
+  }
+
+  .about__text {
+    font-size: var(--normal-font-size); /* Adjust font size for smaller screens */
+    padding: 0 1rem; /* Add horizontal padding for text */
+  }
 }
 
 @media screen and (width <= 455px) {
@@ -2017,6 +2043,15 @@ a-waves {
     display: block; /* Stack items */
     width: 100%; /* Full width */
   }
+
+  .about__subtitle {
+    font-size: 1.2rem; /* Adjust font size for smaller screens */
+    margin-bottom: 0.5rem; /* Space below subtitle */
+  }
+
+  .about__text {
+    font-size: 1rem; /* Adjust font size for smaller screens */
+  }
 }
 
 /* For 375px and below */
@@ -2053,67 +2088,53 @@ a-waves {
 
 /* About Section Styles */
 .about-section {
-    padding: 1rem; /* Add some padding for smaller screens */
-    text-align: center; /* Center text */
+  padding: 1rem; /* Add some padding for smaller screens */
+  text-align: center; /* Center text */
 }
 
 .about__container {
-    display: flex;
-    flex-direction: column; /* Stack items vertically on small screens */
-    align-items: center; /* Center items horizontally */
-    justify-content: center; /* Center items vertically */
+  display: flex;
+  flex-direction: column; /* Stack items vertically on small screens */
+  align-items: center; /* Center items horizontally */
+  justify-content: center; /* Center items vertically */
 }
 
 .about__img {
-    max-width: 100%; /* Ensure the image does not overflow */
-    height: auto; /* Maintain aspect ratio */
-    margin-bottom: 1rem; /* Space between image and text */
-}
-
-.about__subtitle {
-    font-size: 1.2rem; /* Adjust font size for smaller screens */
-    margin-bottom: 0.5rem; /* Space below subtitle */
-}
-
-.about__text {
-    font-size: 1rem; /* Adjust font size for smaller screens */
-    padding: 0 1rem; /* Add horizontal padding for text */
+  max-width: 100%; /* Ensure the image does not overflow */
+  height: auto; /* Maintain aspect ratio */
+  margin-bottom: 1rem; /* Space between image and text */
 }
 
 /* Responsive adjustments for very small screens */
 @media screen and (max-width: 425px) {
-    .about__container {
-        flex-direction: column; /* Stack items vertically */
-        align-items: center; /* Center items */
-    }
+  .about__container {
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items */
+  }
 
-    .about__img {
-        max-width: 80%; /* Limit image width on small screens */
-    }
+  .about__img {
+    max-width: 80%; /* Limit image width on small screens */
+  }
 
-    .about__subtitle {
-        font-size: 1.1rem; /* Smaller font size */
-    }
-
-    .about__text {
-        font-size: 0.9rem; /* Smaller font size */
-    }
+  .about__subtitle {
+    font-size: 1.1rem; /* Smaller font size */
+  }
 }
 
 /* Revert to previous layout for larger screens */
 @media screen and (min-width: 768px) {
-    .about__container {
-      flex-direction: row; /* Align items horizontally */
-      justify-content: space-between; /* Space between items */
-      align-items: center; /* Center items vertically */
-    }
+  .about__container {
+    flex-direction: row; /* Align items horizontally */
+    justify-content: space-between; /* Space between items */
+    align-items: center; /* Center items vertically */
+  }
 
-    .about__img {
-      max-width: 50%; /* Adjust image width for larger screens */
-      margin-bottom: 0; /* Remove bottom margin */
-    }
+  .about__img {
+    max-width: 50%; /* Adjust image width for larger screens */
+    margin-bottom: 0; /* Remove bottom margin */
+  }
 
-    .about__text {
-      max-width: 100%; /* Limit text width for better layout */
-    }
+  .about__text {
+    max-width: 100%; /* Limit text width for better layout */
+  }
 }

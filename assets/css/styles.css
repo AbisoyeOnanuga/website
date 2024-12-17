@@ -655,6 +655,7 @@ a:any-link {
 
 .about__img {
   justify-self: center;
+  margin-right: 1rem;
 }
 
 .about__img img {

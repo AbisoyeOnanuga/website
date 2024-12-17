@@ -696,8 +696,9 @@ a:any-link {
   position: relative;
   font-weight: var(--font-semi);
   padding: 0.5rem 1rem;
-  margin-bottom: var(--mb-4);
+  margin-bottom: var(--mb-2);
   width: 200px;
+  border: 1px solid var(--text-color);
   break-inside: avoid;
 }
 
@@ -1791,8 +1792,8 @@ a-waves {
   }
 
   .skills__table {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    margin-top: 1rem;
+    grid-template-columns: repeat(1, 1fr);
   }
 
   /* Awards and Mentorship sections */

@@ -1514,7 +1514,7 @@ body.theme-switching::before {
   background: var(--bg-color);
   padding: 3rem;
   margin: 2rem auto;
-  border-radius: 0.5rem;
+  border: 3px solid var(--text-color);
   box-shadow: 0 0 30px rgb(0 0 0 / 10%);
   transform-style: preserve-3d;
   transform: translateZ(50px);
@@ -1910,10 +1910,6 @@ a-waves {
 
   .project-card__content {
     width: 100%;
-  }
-
-  .project-card__info {
-    padding: 1rem;
   }
 
   /* Awards and Mentorship fixes */

@@ -325,7 +325,14 @@ a:any-link {
 /* Prevent wrapping at 1024px */
 @media screen and (width <= 1024px) {
   .nav__list {
-    flex-wrap: nowrap; /* Prevent wrapping */
+    flex-wrap: wrap;
+    flex-direction: row; /* Keep horizontal layout */
+  }
+
+  /* Hide specific items */
+  .nav__item:nth-child(1), /* Home */
+  .nav__item:nth-child(5) { /* Mentorship */
+    display: none; /* Hide these items */
   }
 }
 
@@ -348,6 +355,54 @@ a:any-link {
   /* Show only specific items */
   .nav__item:nth-child(n+4) {
     display: none; /* Hide items after "Awards" */
+  }
+}
+
+/* Toggle menu for smaller screens */
+@media screen and (max-width: 425px) {
+  .nav__list {
+    display: none; /* Hide by default */
+  }
+
+  .nav__toggle {
+    display: block; /* Show toggle button */
+  }
+
+  .nav__item {
+    display: block; /* Stack items */
+    width: 100%; /* Full width */
+  }
+}
+
+/* For 375px and below */
+@media screen and (max-width: 375px) {
+  .nav__list {
+    display: none; /* Hide by default */
+  }
+
+  .nav__toggle {
+    display: block; /* Show toggle button */
+  }
+
+  .nav__item {
+    display: block; /* Stack items */
+    width: 100%; /* Full width */
+  }
+}
+
+/* For 320px and below */
+@media screen and (max-width: 320px) {
+  .nav__list {
+    display: none; /* Hide by default */
+  }
+
+  .nav__toggle {
+    display: block; /* Show toggle button */
+  }
+
+  .nav__item {
+    display: block; /* Stack items */
+    width: 100%; /* Full width */
   }
 }
 

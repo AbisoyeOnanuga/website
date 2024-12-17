@@ -2062,7 +2062,6 @@ a-waves {
     flex-direction: column; /* Stack items vertically on small screens */
     align-items: center; /* Center items horizontally */
     justify-content: center; /* Center items vertically */
-    width: 100%; /* Full width */
 }
 
 .about__img {
@@ -2104,17 +2103,17 @@ a-waves {
 /* Revert to previous layout for larger screens */
 @media screen and (min-width: 768px) {
     .about__container {
-        flex-direction: row; /* Align items horizontally */
-        justify-content: space-between; /* Space between items */
-        align-items: center; /* Center items vertically */
+      flex-direction: row; /* Align items horizontally */
+      justify-content: space-between; /* Space between items */
+      align-items: center; /* Center items vertically */
     }
 
     .about__img {
-        max-width: 50%; /* Adjust image width for larger screens */
-        margin-bottom: 0; /* Remove bottom margin */
+      max-width: 50%; /* Adjust image width for larger screens */
+      margin-bottom: 0; /* Remove bottom margin */
     }
 
     .about__text {
-        max-width: 50%; /* Limit text width for better layout */
+      max-width: 100%; /* Limit text width for better layout */
     }
 }

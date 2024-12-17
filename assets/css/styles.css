@@ -1481,6 +1481,8 @@ body.theme-switching::before {
 .about-section {
   background: var(--bg-color);
   color: var(--text-color);
+  padding: 1rem; /* Add some padding for smaller screens */
+  text-align: center; /* Center text */
 }
 
 .skills-section {
@@ -2047,4 +2049,72 @@ a-waves {
     display: block; /* Stack items */
     width: 100%; /* Full width */
   }
+}
+
+/* About Section Styles */
+.about-section {
+    padding: 1rem; /* Add some padding for smaller screens */
+    text-align: center; /* Center text */
+}
+
+.about__container {
+    display: flex;
+    flex-direction: column; /* Stack items vertically on small screens */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+    width: 100%; /* Full width */
+}
+
+.about__img {
+    max-width: 100%; /* Ensure the image does not overflow */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 1rem; /* Space between image and text */
+}
+
+.about__subtitle {
+    font-size: 1.2rem; /* Adjust font size for smaller screens */
+    margin-bottom: 0.5rem; /* Space below subtitle */
+}
+
+.about__text {
+    font-size: 1rem; /* Adjust font size for smaller screens */
+    padding: 0 1rem; /* Add horizontal padding for text */
+}
+
+/* Responsive adjustments for very small screens */
+@media screen and (max-width: 425px) {
+    .about__container {
+        flex-direction: column; /* Stack items vertically */
+        align-items: center; /* Center items */
+    }
+
+    .about__img {
+        max-width: 80%; /* Limit image width on small screens */
+    }
+
+    .about__subtitle {
+        font-size: 1.1rem; /* Smaller font size */
+    }
+
+    .about__text {
+        font-size: 0.9rem; /* Smaller font size */
+    }
+}
+
+/* Revert to previous layout for larger screens */
+@media screen and (min-width: 768px) {
+    .about__container {
+        flex-direction: row; /* Align items horizontally */
+        justify-content: space-between; /* Space between items */
+        align-items: center; /* Center items vertically */
+    }
+
+    .about__img {
+        max-width: 50%; /* Adjust image width for larger screens */
+        margin-bottom: 0; /* Remove bottom margin */
+    }
+
+    .about__text {
+        max-width: 50%; /* Limit text width for better layout */
+    }
 }

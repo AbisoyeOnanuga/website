@@ -194,7 +194,7 @@ class ParticlePortrait {
 
     setupCanvas() {
         this.canvas.width = 400;
-        this.canvas.height = 400;
+        this.canvas.height = 460;
         this.ctx.imageSmoothingEnabled = true;
     }
 

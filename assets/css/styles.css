@@ -828,7 +828,7 @@ a:any-link {
   }
 
   .home__img {
-    width: 450px;
+    width: 460px;
   }
 }
 
@@ -1231,7 +1231,7 @@ body.theme-switching::before {
 /* Portrait blob styles */
 .portrait-container {
   width: 400px;
-  height: 400px;
+  height: 460px;
   margin: 0 auto;
   position: relative;
   cursor: pointer;
@@ -1328,7 +1328,7 @@ body.theme-switching::before {
   justify-content: center;
   right: 0;
   bottom: 0;
-  width: 260px;
+  width: 400px;
 }
 
 .typing-container-wrapper {
@@ -1687,8 +1687,8 @@ a-waves {
 
   /* Portrait container adjustments */
   .portrait-container {
-    width: 280px;
-    height: 280px;
+    width: 200px;
+    height: 230px;
   }
 
   /* Typing container adjustments */
@@ -1768,8 +1768,8 @@ a-waves {
 /* Additional adjustments for very small screens */
 @media screen and (width <= 360px) {
   .portrait-container {
-    width: 240px;
-    height: 240px;
+    width: 200px;
+    height: 230px;
   }
 
   .skills__table {

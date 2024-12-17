@@ -320,7 +320,6 @@ a:any-link {
   height: 6rem;
   justify-content: center;
   border-left: 1px solid var(--text-color); /* Left border */
-  border-right: 1px solid var(--text-color); /* Right border */
 }
 
 /* Prevent wrapping at 1024px */
@@ -524,9 +523,8 @@ a:any-link {
   flex-direction: row; /* Horizontal layout */
   justify-content: center; /* Center items */
   align-items: center;
-  gap: 1rem; /* Space between icons */
-  padding: 0.5rem;
   border-right: 1px solid var(--text-color);
+  border-left: 1px solid var(--text-color);
   background: var(--bg-color); /* Match background with header */
   height: 6rem; /* Match height with theme toggle */
 }
@@ -534,7 +532,7 @@ a:any-link {
 /* Ensure social links are horizontal */
 @media screen and (width <= 768px) {
   .social__links {
-    flex-direction: row; /* Keep horizontal */
+    flex-direction: column; /* Keep horizontal */
   }
 }
 
@@ -836,10 +834,6 @@ a:any-link {
 @media screen and (width >= 600px) {
   .skills__table {
     grid-template-columns: repeat(3, 1fr); /* Switch to three columns */
-  }
-
-  body {
-    margin: 0;
   }
 
   .section {
@@ -1214,10 +1208,6 @@ body.theme-switching::before {
 
 /* Responsive adjustments */
 @media screen and (width <= 768px) {
-  body {
-    padding: 0.5rem;
-  }
-
   .header__wave {
     width: calc(100% + 1rem);
     margin: 2rem -0.5rem;
@@ -1624,11 +1614,11 @@ a-waves {
     position: fixed;
     top: var(--header-height);
     left: 0;
-    width: 100%;
+    width: auto;
     padding: 1rem;
     transform: translateY(-100%);
     transition: transform 0.3s ease;
-    z-index: 4;
+    z-index: 4; 
   }
 
   .header__nav.show {
@@ -1921,7 +1911,7 @@ a-waves {
 
   .header__nav {
     position: static;
-    width: auto;
+    width: 670px;
     background: none;
     padding: 0;
   }

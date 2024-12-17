@@ -543,9 +543,8 @@ class AWaves extends HTMLElement {
     }
 
     setSize() {
-        this.bounding = this.getBoundingClientRect();
-        this.svg.style.width = `${this.bounding.width}px`;
-        this.svg.style.height = `${this.bounding.height}px`;
+        this.svg.style.width = `100%`;
+        this.svg.style.height = `100%`;
     }
 
     setLines() {

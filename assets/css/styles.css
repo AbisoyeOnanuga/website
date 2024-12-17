@@ -1256,7 +1256,6 @@ body.theme-switching::before {
 
 /* Update main content container */
 .l-main {
-  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 0;
 }
